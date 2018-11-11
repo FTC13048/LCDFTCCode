@@ -79,6 +79,7 @@ public class SensorREVColorDistance extends LinearOpMode {
     ColorSensor sensorColor;
     DistanceSensor sensorDistance;
 
+
     @Override
     public void runOpMode() {
 
@@ -100,13 +101,16 @@ public class SensorREVColorDistance extends LinearOpMode {
         int red = 0;
         int blue = 0;
         int green = 0;
+        boolean isRed;
+        boolean isGreen;
+        boolean isBlue;
+        boolean isGold;
+        String colorIs = "";
 
         // get a reference to the RelativeLayout so we can change the background
         // color of the Robot Controller app to match the hue detected by the RGB sensor.
         int relativeLayoutId = hardwareMap.appContext.getResources().getIdentifier("RelativeLayout", "id", hardwareMap.appContext.getPackageName());
         final View relativeLayout = ((Activity) hardwareMap.appContext).findViewById(relativeLayoutId);
-
-        AlertDialog alert = new AlertDialog.Builder(((Activity) hardwareMap.appContext)).create();
 
         // wait for the start button to be pressed.
         waitForStart();
@@ -125,18 +129,27 @@ public class SensorREVColorDistance extends LinearOpMode {
             red = sensorColor.red();
             green = sensorColor.green();
             blue = sensorColor.blue();
-            if(red == 255 && blue == 0 & green == 0)
+
+            isRed = (red == 255 && green == 0 && blue == 0) ? true:false;
+            isGreen = (red == 0 && green == 255 && blue == 0);
+            isBlue = (red == 0 && green == 0 && blue == 255);
+            isGold = (red == 255 && green == 215 && blue == 0);
+
+            if(isRed)
             {
-                alert.setTitle("Color Sensor Alert");
-                alert.setMessage("Color is Red");
-                alert.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                            }
-                        });
-                alert.show();
+                colorIs = "RED";
+            }
+            if(isGreen)
+            {
+                colorIs = "GREEN";
+            }
+            if(isBlue)
+            {
+                colorIs = "BLUE";
+            }
+            if(isGold)
+            {
+                colorIs = "GOLD";
             }
 
             // send the info back to driver station using telemetry function.
@@ -146,7 +159,10 @@ public class SensorREVColorDistance extends LinearOpMode {
             telemetry.addData("Red  ", sensorColor.red());
             telemetry.addData("Green", sensorColor.green());
             telemetry.addData("Blue ", sensorColor.blue());
+            telemetry.addData("What is the color ", colorIs);
             telemetry.addData("Hue", hsvValues[0]);
+            telemetry.addData("Saturation", hsvValues[1]);
+            telemetry.addData("Brightness", hsvValues[2]);
 
             // change the background color to match the color detected by the RGB sensor.
             // pass a reference to the hue, saturation, and value array as an argument
@@ -166,5 +182,20 @@ public class SensorREVColorDistance extends LinearOpMode {
                 relativeLayout.setBackgroundColor(Color.WHITE);
             }
         });
+    }
+
+    private void MessageBox(String title, String message)
+    {
+        AlertDialog alert = new AlertDialog.Builder((hardwareMap.appContext)).create();
+        alert.setTitle(title);
+        alert.setMessage(message);
+        alert.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+        alert.show();
     }
 }
