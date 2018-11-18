@@ -91,7 +91,7 @@ public class AutoOpModeLinear extends LinearOpMode {
         waitForStart();
 
 
-        // Scan servo till stop pressed.
+        // Run code till stop pressed.
         while(opModeIsActive()){
 
             //TestServo();
