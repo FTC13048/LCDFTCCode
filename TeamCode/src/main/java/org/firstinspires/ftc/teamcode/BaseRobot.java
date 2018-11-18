@@ -85,11 +85,6 @@ public class BaseRobot
         armMotor    = hwMap.get(DcMotor.class, "armMotor");
         sweeperMotor    = hwMap.get(DcMotor.class, "sweeperMotor");
 
-        leftMotor.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
-        rightMotor.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
-        rightMotor.setDirection(DcMotor.Direction.FORWARD);// Set to FORWARD if using AndyMark motors
-        sweeperMotor.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
-
         // Set all motors to zero power
         leftMotor.setPower(0);
         rightMotor.setPower(0);

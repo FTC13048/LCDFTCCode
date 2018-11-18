@@ -136,8 +136,13 @@ public class AutoOpModeLinear extends LinearOpMode {
 
     private void DriveMotor()
     {
-        // Set all motors to zero power
+        // Spin the sweep motor
+        baseRobot.sweeperMotor.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
         baseRobot.sweeperMotor.setPower(0.5);
+
+        // Landing the root
+        baseRobot.armMotor.setDirection(DcMotor.Direction.REVERSE);
+        baseRobot.sweeperMotor.setPower(0.15);
 
         // Set all motors to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.
