@@ -38,6 +38,8 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
+import junit.framework.Test;
+
 
 /**
  * This file contains an minimal example of a Linear "OpMode". An OpMode is a 'program' that runs in either
@@ -56,6 +58,8 @@ import com.qualcomm.robotcore.util.Range;
 //@Disabled
 public class AutoOpModeLinear extends LinearOpMode {
 
+    BaseRobot baseRobot = new BaseRobot();
+
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
     private static final double INCREMENT   = 0.01;     // amount to slew servo each CYCLE_MS cycle
@@ -63,15 +67,23 @@ public class AutoOpModeLinear extends LinearOpMode {
     private static final double MAX_POS     =  1.0;     // Maximum rotational position
     private static final double MIN_POS     =  0.0;     // Minimum rotational position
 
-    Servo servo;
+    public DcMotor  leftMotor  = null;
+    public DcMotor  rightMotor  = null;
+    public DcMotor  armMotor = null;
+    public DcMotor  sweeperMotor     = null;
+    public Servo armServo = null;
+
     private double  position = (MAX_POS - MIN_POS) / 2; // Start at halfway position
+    public static final double MID_SERVO       =  0.5 ;
+    public static final double ARM_UP_POWER    =  0.45 ;
+    public static final double ARM_DOWN_POWER  = -0.45 ;
     private boolean rampUp = true;
 
     @Override
     public void runOpMode() {
         // Connect to servo (Assume PushBot Left Hand)
         // Change the text in quotes to match any servo name on your robot.
-        servo = hardwareMap.get(Servo.class, "hookServo");
+        baseRobot.init(hardwareMap);
 
         // Wait for the start button
         telemetry.addData(">", "Press Start to scan Servo." );
@@ -82,37 +94,53 @@ public class AutoOpModeLinear extends LinearOpMode {
         // Scan servo till stop pressed.
         while(opModeIsActive()){
 
-            // slew the servo, according to the rampUp (direction) variable.
-            if (rampUp) {
-                // Keep stepping up until we hit the max value.
-                position += INCREMENT ;
-                if (position >= MAX_POS ) {
-                    position = MAX_POS;
-                    rampUp = !rampUp;   // Switch ramp direction
-                }
-            }
-            else {
-                // Keep stepping down until we hit the min value.
-                position -= INCREMENT ;
-                if (position <= MIN_POS ) {
-                    position = MIN_POS;
-                    rampUp = !rampUp;  // Switch ramp direction
-                }
-            }
-
-            // Display the current value
-            telemetry.addData("Servo Position", "%5.2f", position);
-            telemetry.addData(">", "Press Stop to end test." );
-            telemetry.update();
-
-            // Set the servo to the new position and pause;
-            servo.setPosition(position);
-            sleep(CYCLE_MS);
-            idle();
+            //TestServo();
+            DriveMotor();
         }
 
         // Signal done;
         telemetry.addData(">", "Done");
         telemetry.update();
+    }
+
+    private void TestServo()
+    {
+        // slew the servo, according to the rampUp (direction) variable.
+        if (rampUp) {
+            // Keep stepping up until we hit the max value.
+            position += INCREMENT ;
+            if (position >= MAX_POS ) {
+                position = MAX_POS;
+                rampUp = !rampUp;   // Switch ramp direction
+            }
+        }
+        else {
+            // Keep stepping down until we hit the min value.
+            position -= INCREMENT ;
+            if (position <= MIN_POS ) {
+                position = MIN_POS;
+                rampUp = !rampUp;  // Switch ramp direction
+            }
+        }
+
+        // Display the current value
+        telemetry.addData("Servo Position", "%5.2f", position);
+        telemetry.addData(">", "Press Stop to end test." );
+        telemetry.update();
+
+        // Set the servo to the new position and pause;
+        baseRobot.armServo.setPosition(position);
+        sleep(CYCLE_MS);
+        idle();
+    }
+
+    private void DriveMotor()
+    {
+        // Set all motors to zero power
+        baseRobot.sweeperMotor.setPower(0.5);
+
+        // Set all motors to run without encoders.
+        // May want to use RUN_USING_ENCODERS if encoders are installed.
+        baseRobot.sweeperMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 }
