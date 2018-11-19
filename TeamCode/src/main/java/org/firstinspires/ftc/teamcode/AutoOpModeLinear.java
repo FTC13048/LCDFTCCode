@@ -34,6 +34,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
@@ -89,13 +90,25 @@ public class AutoOpModeLinear extends LinearOpMode {
         telemetry.addData(">", "Press Start to scan Servo." );
         telemetry.update();
         waitForStart();
+        runtime.reset();
 
 
         // Run code till stop pressed.
         while(opModeIsActive()){
 
             //TestServo();
-            DriveMotor();
+            //Run the robot for 7 seconds and then left the basket to deliver minerals to the pod
+            if(runtime.seconds() < 7) {
+                DriveMotor();
+                telemetry.addData("Status", "Driving Motor for: " + runtime.seconds());
+                telemetry.update();
+            }
+            else {
+                StopAllMotors();
+                LiftBasket();
+            }
+            telemetry.addData("Status", "Run Time: " + runtime.seconds());
+            telemetry.update();
         }
 
         // Signal done;
@@ -120,6 +133,7 @@ public class AutoOpModeLinear extends LinearOpMode {
             if (position <= MIN_POS ) {
                 position = MIN_POS;
                 rampUp = !rampUp;  // Switch ramp direction
+
             }
         }
 
@@ -141,11 +155,29 @@ public class AutoOpModeLinear extends LinearOpMode {
         baseRobot.sweeperMotor.setPower(0.5);
 
         // Landing the root
-        baseRobot.armMotor.setDirection(DcMotor.Direction.REVERSE);
-        baseRobot.sweeperMotor.setPower(0.15);
+        //baseRobot.armMotor.setDirection(DcMotor.Direction.REVERSE);
+        //baseRobot.armMotor.setPower(0.15);
 
-        // Set all motors to run without encoders.
-        // May want to use RUN_USING_ENCODERS if encoders are installed.
-        baseRobot.sweeperMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        //Move the robot
+        baseRobot.leftMotor.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
+        baseRobot.leftMotor.setPower(0.25);
+        baseRobot.rightMotor.setDirection(DcMotor.Direction.FORWARD);// Set to FORWARD if using AndyMark motors
+        baseRobot.rightMotor.setPower(0.25);
+    }
+
+    private void StopAllMotors()
+    {
+        // Set all motors to zero power
+        baseRobot.leftMotor.setPower(0);
+        baseRobot.rightMotor.setPower(0);
+        baseRobot.armMotor.setPower(0);
+        baseRobot.sweeperMotor.setPower(0);
+    }
+
+    private void LiftBasket()
+    {
+        baseRobot.armServo.setPosition(-position);
+        sleep(CYCLE_MS);
+        idle();
     }
 }
