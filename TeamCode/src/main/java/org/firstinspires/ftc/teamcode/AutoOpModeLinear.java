@@ -98,7 +98,8 @@ public class AutoOpModeLinear extends LinearOpMode {
 
             //TestServo();
             //Run the robot for 7 seconds and then left the basket to deliver minerals to the pod
-            if(runtime.seconds() < 7) {
+            /*
+            if(runtime.seconds() < 5) {
                 DriveMotor();
                 telemetry.addData("Status", "Driving Motor for: " + runtime.seconds());
                 telemetry.update();
@@ -106,9 +107,24 @@ public class AutoOpModeLinear extends LinearOpMode {
             else {
                 StopAllMotors();
                 LiftBasket();
+                if(runtime.seconds() < 8)
+                {
+                    StopAllMotors();
+                }
             }
             telemetry.addData("Status", "Run Time: " + runtime.seconds());
             telemetry.update();
+
+            if(runtime.seconds() < 3) {
+                LiftBasket();
+            }
+            else if(runtime.seconds() < 6)
+            {
+                DropBasket();
+                StopAllMotors();
+            }
+            */
+            LiftBasket();
         }
 
         // Signal done;
@@ -159,9 +175,9 @@ public class AutoOpModeLinear extends LinearOpMode {
         //baseRobot.armMotor.setPower(0.15);
 
         //Move the robot
-        baseRobot.leftMotor.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
+        baseRobot.leftMotor.setDirection(DcMotor.Direction.FORWARD);// Set to FORWARD if using AndyMark motors
         baseRobot.leftMotor.setPower(0.25);
-        baseRobot.rightMotor.setDirection(DcMotor.Direction.FORWARD);// Set to FORWARD if using AndyMark motors
+        baseRobot.rightMotor.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
         baseRobot.rightMotor.setPower(0.25);
     }
 
@@ -176,7 +192,18 @@ public class AutoOpModeLinear extends LinearOpMode {
 
     private void LiftBasket()
     {
-        baseRobot.armServo.setPosition(-position);
+        //baseRobot.armServo.setPosition(-position);
+        baseRobot.armMotor.setDirection(DcMotor.Direction.FORWARD);
+        baseRobot.armMotor.setPower(0.40);
+        //sleep(CYCLE_MS);
+        //idle();
+    }
+
+    private void DropBasket()
+    {
+        //baseRobot.armServo.setPosition(-position);
+        baseRobot.armMotor.setDirection(DcMotor.Direction.REVERSE);
+        baseRobot.armMotor.setPower(-0.35);
         sleep(CYCLE_MS);
         idle();
     }
