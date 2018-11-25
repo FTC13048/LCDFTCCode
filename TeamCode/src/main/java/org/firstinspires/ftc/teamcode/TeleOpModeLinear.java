@@ -55,9 +55,8 @@ import com.qualcomm.robotcore.util.Range;
 public class TeleOpModeLinear extends LinearOpMode {
 
     // Declare OpMode members.
+    BaseRobot baseRobot = new BaseRobot();
     private ElapsedTime runtime = new ElapsedTime();
-    private DcMotor leftDrive = null;
-    private DcMotor rightDrive = null;
 
     @Override
     public void runOpMode() {
@@ -67,14 +66,7 @@ public class TeleOpModeLinear extends LinearOpMode {
         // Initialize the hardware variables. Note that the strings used here as parameters
         // to 'get' must correspond to the names assigned during the robot configuration
         // step (using the FTC Robot Controller app on the phone).
-        leftDrive  = hardwareMap.get(DcMotor.class, "left_drive");
-        rightDrive = hardwareMap.get(DcMotor.class, "right_drive");
-
-        // Most robots need the motor on one side to be reversed to drive forward
-        // Reverse the motor that runs backwards when connected directly to the battery
-        leftDrive.setDirection(DcMotor.Direction.FORWARD);
-        rightDrive.setDirection(DcMotor.Direction.REVERSE);
-
+        baseRobot.init(hardwareMap);
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
         runtime.reset();
@@ -82,17 +74,23 @@ public class TeleOpModeLinear extends LinearOpMode {
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
 
+
             // Setup a variable for each drive wheel to save power level for telemetry
             double leftPower;
             double rightPower;
-
+            double direction;
+            /*
             // Choose to drive using either Tank Mode, or POV Mode
             // Comment out the method that's not used.  The default below is POV.
 
             // POV Mode uses left stick to go forward, and right stick to turn.
             // - This uses basic math to combine motions and is easier to drive straight.
-            double drive = -gamepad1.left_stick_y;
-            double turn  =  gamepad1.right_stick_x;
+            double drive = -gamepad1.right_trigger;
+            if(gamepad1.dpad_down)
+            {
+
+            }
+            double turn  =  gamepad1.left_trigger;
             leftPower    = Range.clip(drive + turn, -1.0, 1.0) ;
             rightPower   = Range.clip(drive - turn, -1.0, 1.0) ;
 
@@ -102,8 +100,59 @@ public class TeleOpModeLinear extends LinearOpMode {
             // rightPower = -gamepad1.right_stick_y ;
 
             // Send calculated power to wheels
-            leftDrive.setPower(leftPower);
-            rightDrive.setPower(rightPower);
+            baseRobot.leftMotor.setPower(leftPower);
+            baseRobot.rightMotor.setPower(rightPower);
+
+            //Stop Robot
+            if(gamepad1.x) {}
+
+            if(gamepad1.b) {}
+
+            //Arm Up
+            if(gamepad1.y) { baseRobot.armMotor.setPower(0.25);}
+
+            //Arm Down
+            if(gamepad1.a) {baseRobot.armMotor.setPower(-0.25);}
+
+            if(gamepad1.left_stick_button) {
+                baseRobot.armMotor.setPower(gamepad1.left_stick_y);
+            }
+            */
+
+            //move forward
+            leftPower = gamepad1.right_trigger;
+            rightPower = gamepad1.right_trigger;
+            baseRobot.leftMotor.setPower(leftPower);
+            baseRobot.rightMotor.setPower(rightPower);
+
+            //move backward
+            leftPower = -gamepad1.left_trigger;
+            rightPower = -gamepad1.left_trigger;
+            baseRobot.leftMotor.setPower(leftPower);
+            baseRobot.rightMotor.setPower(rightPower);
+
+            //left turn
+            if(gamepad1.dpad_left) {
+                leftPower = 0.4;
+                rightPower = -gamepad1.right_trigger;
+                baseRobot.leftMotor.setPower(leftPower);
+                baseRobot.rightMotor.setPower(rightPower);
+            }
+
+            //left turn
+            if(gamepad1.dpad_right) {
+                leftPower = -gamepad1.right_trigger;
+                rightPower = 0.4;
+                baseRobot.leftMotor.setPower(leftPower);
+                baseRobot.rightMotor.setPower(rightPower);
+            }
+
+            //stop robot
+            if(gamepad1.start)
+            {
+                baseRobot.leftMotor.setPower(0);
+                baseRobot.rightMotor.setPower(0);
+            }
 
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());

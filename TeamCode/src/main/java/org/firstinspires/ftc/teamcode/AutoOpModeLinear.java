@@ -98,7 +98,7 @@ public class AutoOpModeLinear extends LinearOpMode {
 
             //TestServo();
             //Run the robot for 7 seconds and then left the basket to deliver minerals to the pod
-            /*
+
             if(runtime.seconds() < 5) {
                 DriveMotor();
                 telemetry.addData("Status", "Driving Motor for: " + runtime.seconds());
@@ -109,12 +109,13 @@ public class AutoOpModeLinear extends LinearOpMode {
                 LiftBasket();
                 if(runtime.seconds() < 8)
                 {
+                    DropBasket();
                     StopAllMotors();
                 }
             }
             telemetry.addData("Status", "Run Time: " + runtime.seconds());
             telemetry.update();
-
+            /*
             if(runtime.seconds() < 3) {
                 LiftBasket();
             }
@@ -124,7 +125,7 @@ public class AutoOpModeLinear extends LinearOpMode {
                 StopAllMotors();
             }
             */
-            LiftBasket();
+            //LiftBasket();
         }
 
         // Signal done;
@@ -166,10 +167,6 @@ public class AutoOpModeLinear extends LinearOpMode {
 
     private void DriveMotor()
     {
-        // Spin the sweep motor
-        baseRobot.sweeperMotor.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
-        baseRobot.sweeperMotor.setPower(0.5);
-
         // Landing the root
         //baseRobot.armMotor.setDirection(DcMotor.Direction.REVERSE);
         //baseRobot.armMotor.setPower(0.15);
@@ -187,7 +184,6 @@ public class AutoOpModeLinear extends LinearOpMode {
         baseRobot.leftMotor.setPower(0);
         baseRobot.rightMotor.setPower(0);
         baseRobot.armMotor.setPower(0);
-        baseRobot.sweeperMotor.setPower(0);
     }
 
     private void LiftBasket()
