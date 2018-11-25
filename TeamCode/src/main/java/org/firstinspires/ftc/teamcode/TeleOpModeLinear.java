@@ -139,7 +139,7 @@ public class TeleOpModeLinear extends LinearOpMode {
                 baseRobot.rightMotor.setPower(rightPower);
             }
 
-            //left turn
+            //left right
             if(gamepad1.dpad_right) {
                 leftPower = -gamepad1.right_trigger;
                 rightPower = 0.4;
