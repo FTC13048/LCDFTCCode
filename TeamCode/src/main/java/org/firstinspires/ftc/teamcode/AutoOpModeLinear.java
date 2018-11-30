@@ -103,7 +103,7 @@ public class AutoOpModeLinear extends LinearOpMode {
                 DriveMotor();
                 telemetry.addData("Status", "Driving Motor for: " + runtime.seconds());
                 telemetry.update();
-            }
+            }/*
             else {
                 StopAllMotors();
                 LiftBasket();
@@ -112,7 +112,7 @@ public class AutoOpModeLinear extends LinearOpMode {
                     DropBasket();
                     StopAllMotors();
                 }
-            }
+            }*/
             telemetry.addData("Status", "Run Time: " + runtime.seconds());
             telemetry.update();
             /*
@@ -172,10 +172,14 @@ public class AutoOpModeLinear extends LinearOpMode {
         //baseRobot.armMotor.setPower(0.15);
 
         //Move the robot
+        /*
         baseRobot.leftMotor.setDirection(DcMotor.Direction.FORWARD);// Set to FORWARD if using AndyMark motors
         baseRobot.leftMotor.setPower(0.25);
         baseRobot.rightMotor.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
         baseRobot.rightMotor.setPower(0.25);
+        */
+        baseRobot.armMotor.setDirection(DcMotor.Direction.FORWARD);// Set to FORWARD if using AndyMark motors
+        baseRobot.armMotor.setPower(0.20);
     }
 
     private void StopAllMotors()

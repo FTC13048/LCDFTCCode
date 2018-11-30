@@ -33,6 +33,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
@@ -120,12 +121,16 @@ public class TeleOpModeLinear extends LinearOpMode {
             */
 
             //move forward
+            baseRobot.leftMotor.setDirection(DcMotor.Direction.FORWARD);
+            baseRobot.rightMotor.setDirection(DcMotor.Direction.REVERSE);
             leftPower = gamepad1.right_trigger;
             rightPower = gamepad1.right_trigger;
             baseRobot.leftMotor.setPower(leftPower);
             baseRobot.rightMotor.setPower(rightPower);
 
             //move backward
+            baseRobot.leftMotor.setDirection(DcMotor.Direction.FORWARD);
+            baseRobot.rightMotor.setDirection(DcMotor.Direction.REVERSE);
             leftPower = -gamepad1.left_trigger;
             rightPower = -gamepad1.left_trigger;
             baseRobot.leftMotor.setPower(leftPower);
@@ -139,7 +144,7 @@ public class TeleOpModeLinear extends LinearOpMode {
                 baseRobot.rightMotor.setPower(rightPower);
             }
 
-            //left right
+            //right turn
             if(gamepad1.dpad_right) {
                 leftPower = -gamepad1.right_trigger;
                 rightPower = 0.4;
@@ -147,11 +152,29 @@ public class TeleOpModeLinear extends LinearOpMode {
                 baseRobot.rightMotor.setPower(rightPower);
             }
 
+            baseRobot.armMotor.setDirection(DcMotor.Direction.FORWARD);
+            baseRobot.armMotor.setPower(gamepad1.right_stick_y);
+
+
+            baseRobot.armMotor.setDirection(DcMotor.Direction.REVERSE);
+            baseRobot.armMotor.setPower(gamepad1.right_stick_y);
+
+
+            //arm up
+            if (gamepad1.y) {
+                baseRobot.armMotor.setDirection(DcMotor.Direction.FORWARD);
+                baseRobot.armMotor.setPower(0.3);
+            }
+
+            //arm down
+            if (gamepad1.a) {
+                baseRobot.armMotor.setDirection(DcMotor.Direction.REVERSE);
+                baseRobot.armMotor.setPower(-0.2);
+            }
             //stop robot
             if(gamepad1.start)
             {
-                baseRobot.leftMotor.setPower(0);
-                baseRobot.rightMotor.setPower(0);
+                baseRobot.StopRobot(null);
             }
 
             // Show the elapsed game time and wheel power.
