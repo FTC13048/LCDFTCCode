@@ -53,8 +53,8 @@ import java.util.List;
  * is explained below.
  */
 @Autonomous(name = "TensorFlow Object Detection", group = "Concept")
-@Disabled
-public class ConceptTensorFlowObjectDetection_DS extends LinearOpMode {
+//@Disabled
+public class ConceptTensorFlowObjectDetectionLCD extends LinearOpMode {
     private static final String TFOD_MODEL_ASSET = "RoverRuckus.tflite";
     private static final String LABEL_GOLD_MINERAL = "Gold Mineral";
     private static final String LABEL_SILVER_MINERAL = "Silver Mineral";
