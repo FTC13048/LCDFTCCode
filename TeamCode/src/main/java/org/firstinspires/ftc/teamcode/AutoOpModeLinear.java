@@ -81,16 +81,23 @@ public class AutoOpModeLinear extends LinearOpMode {
 
         // Run code till stop pressed.
         while(opModeIsActive()){
-            // Assume the arm is lowered all the way down
-            baseRobot.lowerLatch();                                                              //lower robot
-            baseRobot.DriveRobot(.5, 0, 1000);                      //face the crater/depot
+            //baseRobot.DriveRobot(.5, .5, 1000);
+           baseRobot.lowerLatch();
+           baseRobot.DriveRobot(.5, .5, 1000);
+           baseRobot.latchMotor.setPower(0);
+          //  StopAllMotors();
+           //lower robot
+           // baseRobot.LiftBasket();
+            //baseRobot.DropBasket();
+            /*  baseRobot.DriveRobot(.5, 0, 1000);                      //face the crater/depot
 
                     //PICK ONE OF THE BELOW 6 -- YOU ARE  T H E   R O B O T
 
                     //CRATER LEFT
                     baseRobot.DriveRobot(0, .2, 250);               //turn left to face the mineral
                     baseRobot.DriveRobot(.25, .25, 1000);           //ram gold mineral
-                    baseRobot.DriveRobot(-.5, -.5, 1000);           //Back away from minerals
+                    baseRobot.DriveRobot(-
+                    +5, -.5, 1000);           //Back away from minerals
 
                     //CRATER RIGHT
                     baseRobot.DriveRobot(.2, 0, 250);               //turn right to face the mineral
@@ -114,7 +121,7 @@ public class AutoOpModeLinear extends LinearOpMode {
                     //DEPOT CENTER
                     baseRobot.DriveRobot(.25, .25, 1000);           //Ram gold mineral
                     baseRobot.DriveRobot(.25, .25, 1000);           //move a little extra into the depot
-
+*/
             telemetry.addData("Status", "Run Time: " + runtime.seconds());
             telemetry.update();
             /*

@@ -99,6 +99,8 @@ public class BaseRobot
         // May want to use RUN_USING_ENCODERS if encoders are installed.
         leftMotor.setDirection(DcMotor.Direction.FORWARD);// Set to FORWARD if using AndyMark motors
         rightMotor.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
+        armMotor.setDirection(DcMotor.Direction.REVERSE);
+        latchMotor.setDirection(DcMotor.Direction.FORWARD);
         leftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         armMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -114,6 +116,7 @@ public class BaseRobot
         //Move the robot
         leftMotor.setPower(leftPower);
         rightMotor.setPower(rightPower);
+
         sleep(seconds);
         StopRobot(leftMotor);
         StopRobot(rightMotor);
@@ -138,26 +141,18 @@ public class BaseRobot
     public void LiftBasket()
     {
         armMotor.setDirection(DcMotor.Direction.FORWARD);
-        armMotor.setPower(0.40);
+        armMotor.setPower(0.50);
     }
 
     public void DropBasket()
     {
-        armMotor.setDirection(DcMotor.Direction.REVERSE);
-        armMotor.setPower(-0.35);
+        armMotor.setPower(-0.5);
     }
-//    public void turn(double left, double right)
-//    {
-//        leftMotor.setPower(left);                          //Add power val based on calcs
-//        rightMotor.setPower(right);                         //Add power val based on calcs
-//        StopRobot(leftMotor);
-//        StopRobot(rightMotor);
-//    }
 
     public void lowerLatch()
     {
         latchMotor.setPower(-0.25);                         //Add power val based on calcs
-        sleep(5000);
+        sleep(4000);
         StopRobot(latchMotor);
     }
     public void raiseLatch()
