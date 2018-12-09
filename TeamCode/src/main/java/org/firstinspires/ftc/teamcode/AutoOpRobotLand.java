@@ -30,16 +30,10 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.util.Range;
-
-import junit.framework.Test;
 
 
 /**
@@ -55,9 +49,9 @@ import junit.framework.Test;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="AutoOpMode_Linear", group="Linear Opmode")
+@Autonomous(name="AutoOp_RobotLand", group="Linear Opmode")
 //@Disabled
-public class AutoOpModeLinear extends LinearOpMode {
+public class AutoOpRobotLand extends LinearOpMode {
 
     FTCBaseRobot baseRobot = new FTCBaseRobot();
 
@@ -87,7 +81,7 @@ public class AutoOpModeLinear extends LinearOpMode {
         baseRobot.init(hardwareMap);
 
         // Wait for the start button
-        telemetry.addData(">", "Press Start to scan Servo." );
+        telemetry.addData(">", "Press Start to Test Robot Landing." );
         telemetry.update();
         waitForStart();
         runtime.reset();
@@ -96,120 +90,21 @@ public class AutoOpModeLinear extends LinearOpMode {
         // Run code till stop pressed.
         while(opModeIsActive()){
 
-            //TestServo();
-            //Run the robot for 7 seconds and then left the basket to deliver minerals to the pod
-
             baseRobot.RobotDescend();
             sleep(5000);
             baseRobot.StopRobot(baseRobot.latchMotor);
+            baseRobot.DriveRobot(0.25,0);
+            sleep(2000);
+            /*
             baseRobot.DriveRobot(-0.25,-0.25);
             sleep(1000);
             baseRobot.DriveRobot(0.25,0);
             sleep(2000);
-
-            /*
-            if(runtime.seconds() < 5) {
-                DriveMotor();
-                telemetry.addData("Status", "Driving Motor for: " + runtime.seconds());
-                telemetry.update();
-            }
-            else {
-                StopAllMotors();
-                LiftBasket();
-                if(runtime.seconds() < 8)
-                {
-                    DropBasket();
-                    StopAllMotors();
-                }
-            }
-            telemetry.addData("Status", "Run Time: " + runtime.seconds());
-            telemetry.update();
-
-            if(runtime.seconds() < 3) {
-                LiftBasket();
-            }
-            else if(runtime.seconds() < 6)
-            {
-                DropBasket();
-                StopAllMotors();
-            }
             */
-            //LiftBasket();
         }
 
         // Signal done;
         telemetry.addData(">", "Done");
         telemetry.update();
-    }
-
-    private void TestServo()
-    {
-        // slew the servo, according to the rampUp (direction) variable.
-        if (rampUp) {
-            // Keep stepping up until we hit the max value.
-            position += INCREMENT ;
-            if (position >= MAX_POS ) {
-                position = MAX_POS;
-                rampUp = !rampUp;   // Switch ramp direction
-            }
-        }
-        else {
-            // Keep stepping down until we hit the min value.
-            position -= INCREMENT ;
-            if (position <= MIN_POS ) {
-                position = MIN_POS;
-                rampUp = !rampUp;  // Switch ramp direction
-
-            }
-        }
-
-        // Display the current value
-        telemetry.addData("Servo Position", "%5.2f", position);
-        telemetry.addData(">", "Press Stop to end test." );
-        telemetry.update();
-
-        // Set the servo to the new position and pause;
-        baseRobot.armServo.setPosition(position);
-        sleep(CYCLE_MS);
-        idle();
-    }
-
-    private void DriveMotor()
-    {
-        // Landing the root
-        //baseRobot.armMotor.setDirection(DcMotor.Direction.REVERSE);
-        //baseRobot.armMotor.setPower(0.15);
-
-        //Move the robot
-        baseRobot.leftMotor.setDirection(DcMotor.Direction.FORWARD);// Set to FORWARD if using AndyMark motors
-        baseRobot.leftMotor.setPower(0.25);
-        baseRobot.rightMotor.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
-        baseRobot.rightMotor.setPower(0.25);
-    }
-
-    private void StopAllMotors()
-    {
-        // Set all motors to zero power
-        baseRobot.leftMotor.setPower(0);
-        baseRobot.rightMotor.setPower(0);
-        baseRobot.armMotor.setPower(0);
-    }
-
-    private void LiftBasket()
-    {
-        //baseRobot.armServo.setPosition(-position);
-        baseRobot.armMotor.setDirection(DcMotor.Direction.FORWARD);
-        baseRobot.armMotor.setPower(0.40);
-        //sleep(CYCLE_MS);
-        //idle();
-    }
-
-    private void DropBasket()
-    {
-        //baseRobot.armServo.setPosition(-position);
-        baseRobot.armMotor.setDirection(DcMotor.Direction.REVERSE);
-        baseRobot.armMotor.setPower(-0.35);
-        sleep(CYCLE_MS);
-        idle();
     }
 }

@@ -55,7 +55,7 @@ import com.qualcomm.robotcore.util.Range;
 public class TeleOpModeLinear extends LinearOpMode {
 
     // Declare OpMode members.
-    BaseRobot baseRobot = new BaseRobot();
+    FTCBaseRobot baseRobot = new FTCBaseRobot();
     private ElapsedTime runtime = new ElapsedTime();
 
     @Override
@@ -76,8 +76,10 @@ public class TeleOpModeLinear extends LinearOpMode {
 
 
             // Setup a variable for each drive wheel to save power level for telemetry
-            double leftPower;
-            double rightPower;
+            double leftPower =0;
+            double rightPower =0;
+            double armPower =0;
+            double armPosition=0;
             double direction;
             /*
             // Choose to drive using either Tank Mode, or POV Mode
@@ -102,22 +104,9 @@ public class TeleOpModeLinear extends LinearOpMode {
             // Send calculated power to wheels
             baseRobot.leftMotor.setPower(leftPower);
             baseRobot.rightMotor.setPower(rightPower);
-
-            //Stop Robot
-            if(gamepad1.x) {}
-
-            if(gamepad1.b) {}
-
-            //Arm Up
-            if(gamepad1.y) { baseRobot.armMotor.setPower(0.25);}
-
-            //Arm Down
-            if(gamepad1.a) {baseRobot.armMotor.setPower(-0.25);}
-
-            if(gamepad1.left_stick_button) {
-                baseRobot.armMotor.setPower(gamepad1.left_stick_y);
-            }
             */
+
+            //GAMEPAD 1
 
             //move forward
             leftPower = gamepad1.right_trigger;
@@ -133,25 +122,60 @@ public class TeleOpModeLinear extends LinearOpMode {
 
             //left turn
             if(gamepad1.dpad_left) {
-                leftPower = 0.4;
-                rightPower = -gamepad1.right_trigger;
+                leftPower = 0; //0.4;
+                rightPower = 0.4;  //-gamepad1.right_trigger;
                 baseRobot.leftMotor.setPower(leftPower);
                 baseRobot.rightMotor.setPower(rightPower);
             }
 
-            //left turn
+            //right turn
             if(gamepad1.dpad_right) {
-                leftPower = -gamepad1.right_trigger;
-                rightPower = 0.4;
+                leftPower = 0.4; //-gamepad1.right_trigger;
+                rightPower = 0; //0.4;
                 baseRobot.leftMotor.setPower(leftPower);
                 baseRobot.rightMotor.setPower(rightPower);
             }
+
+            //GAMEPAD 2
+
+            //AMR Up or Down
+            if(gamepad2.right_trigger != 0){
+                armPower = gamepad2.right_trigger; //arm up
+            }
+            else if (gamepad2.left_trigger != 0){
+                armPower = - gamepad2.left_trigger; //arm down
+            }
+            baseRobot.armMotor.setPower(armPower);
+
+            //Extend and backtrack Basket
+            if(gamepad2.x)
+            {
+                //extend
+                baseRobot.armServo.setPosition(0.5);
+            }
+            else if (gamepad2.b)
+            {
+                //backtrack
+                baseRobot.armServo.setPosition(-0.5);
+            }
+
+            //Latch Up and Down
+            if(gamepad2.y)
+            {
+                //Robot up
+                baseRobot.RobotAscend();
+            }
+            else if(gamepad2.a)
+            {
+                //Robot down
+                baseRobot.RobotDescend();
+            }
+
 
             //stop robot
-            if(gamepad1.start)
+            if(gamepad1.back)
             {
-                baseRobot.leftMotor.setPower(0);
-                baseRobot.rightMotor.setPower(0);
+                baseRobot.StopRobot(null);
             }
 
             // Show the elapsed game time and wheel power.

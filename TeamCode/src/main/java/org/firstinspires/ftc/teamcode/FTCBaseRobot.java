@@ -51,12 +51,13 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Servo channel:  Servo to open left claw:  "left_hand"
  * Servo channel:  Servo to open right claw: "right_hand"
  */
-public class BaseRobot
+public class FTCBaseRobot
 {
     /* Public OpMode members. */
     public DcMotor  leftMotor   = null;
     public DcMotor  rightMotor  = null;
     public DcMotor  armMotor     = null;
+    public DcMotor  latchMotor     = null;
 
     public Servo    armServo    = null;
 
@@ -69,7 +70,7 @@ public class BaseRobot
     private ElapsedTime period  = new ElapsedTime();
 
     /* Constructor */
-    public BaseRobot(){
+    public FTCBaseRobot(){
 
     }
 
@@ -82,30 +83,33 @@ public class BaseRobot
         leftMotor  = hwMap.get(DcMotor.class, "leftMotor");
         rightMotor = hwMap.get(DcMotor.class, "rightMotor");
         armMotor    = hwMap.get(DcMotor.class, "armMotor");
+        latchMotor    = hwMap.get(DcMotor.class, "latchMotor");
 
         // Set all motors to zero power
         leftMotor.setPower(0);
         rightMotor.setPower(0);
         armMotor.setPower(0);
+        latchMotor.setPower(0);
 
         // Set all motors to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.
         leftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         armMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        latchMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         // Define and initialize ALL installed servos.
         armServo  = hwMap.get(Servo.class, "armServo");
         armServo.setPosition(MID_SERVO);
     }
 
-    public void DriveRobot()
+    public void DriveRobot(double leftPower, double rightPower)
     {
         //Move the robot
         leftMotor.setDirection(DcMotor.Direction.FORWARD);// Set to FORWARD if using AndyMark motors
-        leftMotor.setPower(0.25);
+        leftMotor.setPower(leftPower);
         rightMotor.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
-        rightMotor.setPower(0.25);
+        rightMotor.setPower(rightPower);
     }
 
     public void StopRobot(DcMotor motor)
@@ -115,11 +119,25 @@ public class BaseRobot
             leftMotor.setPower(0);
             rightMotor.setPower(0);
             armMotor.setPower(0);
+            latchMotor.setPower(0);
         }
         else
         {
             motor.setPower(0);
         }
+    }
+
+    //Autonomous
+
+    public void RobotDescend()
+    {
+        latchMotor.setDirection(DcMotor.Direction.FORWARD);
+        latchMotor.setPower(0.25);
+    }
+
+    public void RobotAscend() {
+        latchMotor.setDirection(DcMotor.Direction.REVERSE);
+        latchMotor.setPower(0.25);
     }
 
     public void LiftBasket()
@@ -129,6 +147,31 @@ public class BaseRobot
     }
 
     public void DropBasket()
+    {
+        armMotor.setDirection(DcMotor.Direction.REVERSE);
+        armMotor.setPower(-0.35);
+    }
+
+    //TeleOp
+
+    public void RobotDescend(double motorPower)
+    {
+        latchMotor.setDirection(DcMotor.Direction.FORWARD);
+        latchMotor.setPower(0.25);
+    }
+
+    public void RobotAscend(double motorPower) {
+        latchMotor.setDirection(DcMotor.Direction.REVERSE);
+        latchMotor.setPower(0.25);
+    }
+
+    public void LiftBasket(double motorPower)
+    {
+        armMotor.setDirection(DcMotor.Direction.FORWARD);
+        armMotor.setPower(0.40);
+    }
+
+    public void DropBasket(double motorPower)
     {
         armMotor.setDirection(DcMotor.Direction.REVERSE);
         armMotor.setPower(-0.35);
