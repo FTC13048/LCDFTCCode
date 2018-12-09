@@ -122,16 +122,16 @@ public class TeleOpModeLinear extends LinearOpMode {
 
             //left turn
             if(gamepad1.dpad_left) {
-                leftPower = 0; //0.4;
-                rightPower = 0.4;  //-gamepad1.right_trigger;
+                leftPower = 0.4;
+                rightPower = -gamepad1.right_trigger;
                 baseRobot.leftMotor.setPower(leftPower);
                 baseRobot.rightMotor.setPower(rightPower);
             }
 
             //right turn
             if(gamepad1.dpad_right) {
-                leftPower = 0.4; //-gamepad1.right_trigger;
-                rightPower = 0; //0.4;
+                leftPower = -gamepad1.right_trigger;
+                rightPower = 0.4;
                 baseRobot.leftMotor.setPower(leftPower);
                 baseRobot.rightMotor.setPower(rightPower);
             }
@@ -151,13 +151,20 @@ public class TeleOpModeLinear extends LinearOpMode {
             if(gamepad2.x)
             {
                 //extend
-                baseRobot.armServo.setPosition(0.5);
+                //baseRobot.armServo.setPosition(0.5);
+                baseRobot.MoveBasket(FTCBaseRobot.ServoPosition.FORWARD);
             }
             else if (gamepad2.b)
             {
                 //backtrack
-                baseRobot.armServo.setPosition(-0.5);
+                //baseRobot.armServo.setPosition(-0.5);
+                baseRobot.MoveBasket(FTCBaseRobot.ServoPosition.REVERSE);
             }
+            else if(gamepad2.start)
+            {
+                baseRobot.MoveBasket(FTCBaseRobot.ServoPosition.STOP);
+            }
+
 
             //Latch Up and Down
             if(gamepad2.y)
@@ -171,9 +178,10 @@ public class TeleOpModeLinear extends LinearOpMode {
                 baseRobot.RobotDescend();
             }
 
+            //GAMEPAD 1 and 2
 
             //stop robot
-            if(gamepad1.back)
+            if(gamepad1.back || gamepad2.back)
             {
                 baseRobot.StopRobot(null);
             }

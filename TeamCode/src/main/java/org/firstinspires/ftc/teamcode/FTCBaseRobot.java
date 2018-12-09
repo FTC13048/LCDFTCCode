@@ -65,6 +65,17 @@ public class FTCBaseRobot
     public static final double ARM_UP_POWER    =  0.45 ;
     public static final double ARM_DOWN_POWER  = -0.45 ;
 
+    private static final double CONTINUOUS_SERVO_STOP = 0.5;
+    private static final double CONTINUOUS_SERVO_FORWARD = 1.0;
+    private static final double CONTINUOUS_SERVO_REVERSE = 0.0;
+
+    public enum ServoPosition
+    {
+        STOP,
+        FORWARD,
+        REVERSE
+    }
+
     /* local OpMode members. */
     private HardwareMap hwMap   =  null;
     private ElapsedTime period  = new ElapsedTime();
@@ -100,7 +111,7 @@ public class FTCBaseRobot
 
         // Define and initialize ALL installed servos.
         armServo  = hwMap.get(Servo.class, "armServo");
-        armServo.setPosition(MID_SERVO);
+        armServo.setPosition(CONTINUOUS_SERVO_STOP);
     }
 
     public void DriveRobot(double leftPower, double rightPower)
@@ -120,10 +131,27 @@ public class FTCBaseRobot
             rightMotor.setPower(0);
             armMotor.setPower(0);
             latchMotor.setPower(0);
+            armServo.setPosition(CONTINUOUS_SERVO_STOP);
         }
         else
         {
             motor.setPower(0);
+        }
+    }
+
+    public void MoveBasket(ServoPosition servoPos)
+    {
+        if(servoPos == ServoPosition.STOP)
+        {
+            armServo.setPosition(CONTINUOUS_SERVO_STOP);
+        }
+        else if (servoPos == ServoPosition.FORWARD)
+        {
+            armServo.setPosition(CONTINUOUS_SERVO_FORWARD);
+        }
+        else if(servoPos == ServoPosition.REVERSE)
+        {
+            armServo.setPosition(CONTINUOUS_SERVO_REVERSE);
         }
     }
 
