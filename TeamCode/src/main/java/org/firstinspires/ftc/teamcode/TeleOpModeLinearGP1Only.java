@@ -55,6 +55,7 @@ public class TeleOpModeLinearGP1Only extends LinearOpMode {
     FTCBaseRobot baseRobot = new FTCBaseRobot();
     private ElapsedTime runtime = new ElapsedTime();
 
+
     @Override
     public void runOpMode() {
         telemetry.addData("Status", "Initialized");
@@ -108,37 +109,33 @@ public class TeleOpModeLinearGP1Only extends LinearOpMode {
             //move forward
             leftPower = gamepad1.right_trigger;
             rightPower = gamepad1.right_trigger;
-            baseRobot.leftMotor.setPower(leftPower);
-            baseRobot.rightMotor.setPower(rightPower);
+            baseRobot.DriveRobot(leftPower,rightPower);
 
             //move backward
             leftPower = -gamepad1.left_trigger;
             rightPower = -gamepad1.left_trigger;
-            baseRobot.leftMotor.setPower(leftPower);
-            baseRobot.rightMotor.setPower(rightPower);
+            baseRobot.DriveRobot(leftPower,rightPower);
 
             //left turn
             if(gamepad1.dpad_left) {
                 leftPower = 0.4;
                 rightPower = -gamepad1.right_trigger;
-                baseRobot.leftMotor.setPower(leftPower);
-                baseRobot.rightMotor.setPower(rightPower);
+                baseRobot.DriveRobot(leftPower,rightPower);
             }
 
             //right turn
             if(gamepad1.dpad_right) {
                 leftPower = -gamepad1.right_trigger;
                 rightPower = 0.4;
-                baseRobot.leftMotor.setPower(leftPower);
-                baseRobot.rightMotor.setPower(rightPower);
+                baseRobot.DriveRobot(leftPower,rightPower);
             }
 
             //AMR Up or Down
             if(gamepad1.right_bumper){
-                armPower = 0.4; //arm up
+                armPower = 0.3; //arm up
             }
             else if (gamepad1.left_bumper){
-                armPower = - 0.4; //arm down
+                armPower = - 0.3; //arm down
             }
             baseRobot.armMotor.setPower(armPower);
 
@@ -147,17 +144,21 @@ public class TeleOpModeLinearGP1Only extends LinearOpMode {
             {
                 //extend
                 //baseRobot.armServo.setPosition(0.5);
-                baseRobot.MoveBasket(FTCBaseRobot.ServoPosition.FORWARD);
+                telemetry.addData("GAMEPAD", "X Button was pressed");
+                //baseRobot.MoveBasket(FTCBaseRobot.ServoPosition.REVERSE);
             }
             else if (gamepad1.b)
             {
                 //backtrack
                 //baseRobot.armServo.setPosition(-0.5);
-                baseRobot.MoveBasket(FTCBaseRobot.ServoPosition.REVERSE);
+                telemetry.addData("GAMEPAD", "B Button was pressed");
+
+                //baseRobot.MoveBasket(FTCBaseRobot.ServoPosition.FORWARD);
             }
             else if(gamepad1.start)
             {
-                baseRobot.MoveBasket(FTCBaseRobot.ServoPosition.STOP);
+                telemetry.addData("GAMEPAD", "Start Button was pressed");
+                //baseRobot.MoveBasket(FTCBaseRobot.ServoPosition.STOP);
             }
 
 
@@ -165,23 +166,26 @@ public class TeleOpModeLinearGP1Only extends LinearOpMode {
             if(gamepad1.y)
             {
                 //Robot up
-                baseRobot.RobotAscend();
+                telemetry.addData("GAMEPAD", "Y Button was pressed");
+                //baseRobot.RobotAscend();
             }
             else if(gamepad1.a)
             {
                 //Robot down
-                baseRobot.RobotDescend();
+                telemetry.addData("GAMEPAD", "A Button was pressed");
+                //baseRobot.RobotDescend();
             }
 
             //stop robot
             if(gamepad1.back)
             {
-                baseRobot.StopRobot(null);
+                telemetry.addData("GAMEPAD", "Back Button was pressed");
+                //baseRobot.StopRobot(null);
             }
 
             // Show the elapsed game time and wheel power.
-            telemetry.addData("Status", "Run Time: " + runtime.toString());
-            telemetry.addData("Motors", "left (%.2f), right (%.2f)", leftPower, rightPower);
+            //telemetry.addData("Status", "Run Time: " + runtime.toString());
+            //telemetry.addData("Motors", "left (%.2f), right (%.2f)", leftPower, rightPower);
             telemetry.update();
         }
     }

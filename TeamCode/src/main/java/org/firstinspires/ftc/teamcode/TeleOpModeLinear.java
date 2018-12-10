@@ -111,68 +111,52 @@ public class TeleOpModeLinear extends LinearOpMode {
             //move forward
             leftPower = gamepad1.right_trigger;
             rightPower = gamepad1.right_trigger;
-            baseRobot.leftMotor.setPower(leftPower);
-            baseRobot.rightMotor.setPower(rightPower);
+            baseRobot.DriveRobot(leftPower,rightPower);
 
             //move backward
             leftPower = -gamepad1.left_trigger;
             rightPower = -gamepad1.left_trigger;
-            baseRobot.leftMotor.setPower(leftPower);
-            baseRobot.rightMotor.setPower(rightPower);
+            baseRobot.DriveRobot(leftPower,rightPower);
 
             //left turn
             if(gamepad1.dpad_left) {
                 leftPower = 0.4;
                 rightPower = -gamepad1.right_trigger;
-                baseRobot.leftMotor.setPower(leftPower);
-                baseRobot.rightMotor.setPower(rightPower);
+                baseRobot.DriveRobot(leftPower,rightPower);
             }
 
             //right turn
             if(gamepad1.dpad_right) {
                 leftPower = -gamepad1.right_trigger;
                 rightPower = 0.4;
-                baseRobot.leftMotor.setPower(leftPower);
-                baseRobot.rightMotor.setPower(rightPower);
+                baseRobot.DriveRobot(leftPower,rightPower);
             }
 
             //AMR Up or Down
-            if(gamepad1.right_bumper){
-                armPower = 0.4; //arm up
-            }
-            else if (gamepad1.left_bumper){
-                armPower = - 0.4; //arm down
-            }
+            armPower = -gamepad1.left_stick_y/2.5;
+            telemetry.addData("armMotors", "arm (%.2f)", armPower);
             baseRobot.armMotor.setPower(armPower);
 
             //GAMEPAD 2
-
-            //AMR Up or Down
-            /*
-            if(gamepad2.right_trigger != 0){
-                armPower = gamepad2.right_trigger; //arm up
-            }
-            else if (gamepad2.left_trigger != 0){
-                armPower = - gamepad2.left_trigger; //arm down
-            }
-            baseRobot.armMotor.setPower(armPower);
-            */
 
             //Extend and backtrack Basket
             if(gamepad2.x)
             {
                 //extend
                 //baseRobot.armServo.setPosition(0.5);
+                telemetry.addData("GAMEPAD", "X Button was pressed");
                 baseRobot.MoveBasket(FTCBaseRobot.ServoPosition.FORWARD);
             }
             else if (gamepad2.b)
             {
                 //backtrack
                 //baseRobot.armServo.setPosition(-0.5);
+                telemetry.addData("GAMEPAD", "B Button was pressed");
                 baseRobot.MoveBasket(FTCBaseRobot.ServoPosition.REVERSE);
             }
             else if(gamepad2.start)
             {
+                telemetry.addData("GAMEPAD", "Start Button was pressed");
                 baseRobot.MoveBasket(FTCBaseRobot.ServoPosition.STOP);
             }
 
@@ -181,25 +165,27 @@ public class TeleOpModeLinear extends LinearOpMode {
             if(gamepad2.y)
             {
                 //Robot up
+                telemetry.addData("GAMEPAD", "Y Button was pressed");
                 baseRobot.RobotAscend();
             }
             else if(gamepad2.a)
             {
                 //Robot down
+                telemetry.addData("GAMEPAD", "A Button was pressed");
                 baseRobot.RobotDescend();
             }
 
             //GAMEPAD 1 and 2
 
             //stop robot
-            if(gamepad1.back || gamepad2.back)
+            if(gamepad1.back || gamepad2.back) //NOT WORKING
             {
                 baseRobot.StopRobot(null);
             }
 
             // Show the elapsed game time and wheel power.
-            telemetry.addData("Status", "Run Time: " + runtime.toString());
-            telemetry.addData("Motors", "left (%.2f), right (%.2f)", leftPower, rightPower);
+            //telemetry.addData("Status", "Run Time: " + runtime.toString());
+            //telemetry.addData("Motors", "left (%.2f), right (%.2f)", leftPower, rightPower);
             telemetry.update();
         }
     }

@@ -96,12 +96,6 @@ public class FTCBaseRobot
         armMotor    = hwMap.get(DcMotor.class, "armMotor");
         latchMotor    = hwMap.get(DcMotor.class, "latchMotor");
 
-        // Set all motors to zero power
-        leftMotor.setPower(0);
-        rightMotor.setPower(0);
-        armMotor.setPower(0);
-        latchMotor.setPower(0);
-
         // Set all motors to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.
         leftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -109,18 +103,24 @@ public class FTCBaseRobot
         armMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         latchMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
+        // Set all motors to zero power
+        leftMotor.setPower(0);
+        rightMotor.setPower(0);
+        armMotor.setPower(0);
+        latchMotor.setPower(0);
+
         // Define and initialize ALL installed servos.
         armServo  = hwMap.get(Servo.class, "armServo");
-        armServo.setPosition(CONTINUOUS_SERVO_STOP);
+        //armServo.setPosition(CONTINUOUS_SERVO_STOP);
     }
 
     public void DriveRobot(double leftPower, double rightPower)
     {
         //Move the robot
-        leftMotor.setDirection(DcMotor.Direction.FORWARD);// Set to FORWARD if using AndyMark motors
-        leftMotor.setPower(leftPower);
         rightMotor.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
         rightMotor.setPower(rightPower);
+        leftMotor.setDirection(DcMotor.Direction.FORWARD);// Set to FORWARD if using AndyMark motors
+        leftMotor.setPower(leftPower);
     }
 
     public void StopRobot(DcMotor motor)
