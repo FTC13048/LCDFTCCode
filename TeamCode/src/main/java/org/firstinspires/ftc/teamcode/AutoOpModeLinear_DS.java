@@ -29,7 +29,7 @@ public class AutoOpModeLinear_DS extends LinearOpMode {
     private boolean rampUp = true;
     private int goldPos = 0;
 
-    BaseRobot baseRobot = new BaseRobot();
+    FTCBaseRobot baseRobot = new FTCBaseRobot();
     vuforiaNavRecognize vuforiaNR = new vuforiaNavRecognize();
 
     @Override
