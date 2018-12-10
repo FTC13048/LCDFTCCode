@@ -29,12 +29,9 @@
 
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.util.Range;
 
 
 /**
@@ -50,9 +47,9 @@ import com.qualcomm.robotcore.util.Range;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="TeleOpMode_Linear", group="Linear Opmode")
+@TeleOp(name="TeleOpMode_Linear_GP1Only", group="Linear Opmode")
 //@Disabled
-public class TeleOpModeLinear extends LinearOpMode {
+public class TeleOpModeLinearGP1Only extends LinearOpMode {
 
     // Declare OpMode members.
     FTCBaseRobot baseRobot = new FTCBaseRobot();
@@ -145,54 +142,39 @@ public class TeleOpModeLinear extends LinearOpMode {
             }
             baseRobot.armMotor.setPower(armPower);
 
-            //GAMEPAD 2
-
-            //AMR Up or Down
-            /*
-            if(gamepad2.right_trigger != 0){
-                armPower = gamepad2.right_trigger; //arm up
-            }
-            else if (gamepad2.left_trigger != 0){
-                armPower = - gamepad2.left_trigger; //arm down
-            }
-            baseRobot.armMotor.setPower(armPower);
-            */
-
             //Extend and backtrack Basket
-            if(gamepad2.x)
+            if(gamepad1.x)
             {
                 //extend
                 //baseRobot.armServo.setPosition(0.5);
                 baseRobot.MoveBasket(FTCBaseRobot.ServoPosition.FORWARD);
             }
-            else if (gamepad2.b)
+            else if (gamepad1.b)
             {
                 //backtrack
                 //baseRobot.armServo.setPosition(-0.5);
                 baseRobot.MoveBasket(FTCBaseRobot.ServoPosition.REVERSE);
             }
-            else if(gamepad2.start)
+            else if(gamepad1.start)
             {
                 baseRobot.MoveBasket(FTCBaseRobot.ServoPosition.STOP);
             }
 
 
             //Latch Up and Down
-            if(gamepad2.y)
+            if(gamepad1.y)
             {
                 //Robot up
                 baseRobot.RobotAscend();
             }
-            else if(gamepad2.a)
+            else if(gamepad1.a)
             {
                 //Robot down
                 baseRobot.RobotDescend();
             }
 
-            //GAMEPAD 1 and 2
-
             //stop robot
-            if(gamepad1.back || gamepad2.back)
+            if(gamepad1.back)
             {
                 baseRobot.StopRobot(null);
             }
