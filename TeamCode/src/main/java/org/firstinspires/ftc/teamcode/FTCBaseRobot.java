@@ -35,10 +35,6 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import static android.os.SystemClock.sleep;
-
-//import static java.lang.Thread.sleep;
-
 /**
  * This is NOT an opmode.
  *
@@ -55,13 +51,13 @@ import static android.os.SystemClock.sleep;
  * Servo channel:  Servo to open left claw:  "left_hand"
  * Servo channel:  Servo to open right claw: "right_hand"
  */
-public class BaseRobot
+public class FTCBaseRobot
 {
     /* Public OpMode members. */
     public DcMotor  leftMotor   = null;
     public DcMotor  rightMotor  = null;
     public DcMotor  armMotor     = null;
-    public DcMotor latchMotor;
+    public DcMotor  latchMotor     = null;
 
     public Servo    armServo    = null;
 
@@ -69,12 +65,23 @@ public class BaseRobot
     public static final double ARM_UP_POWER    =  0.45 ;
     public static final double ARM_DOWN_POWER  = -0.45 ;
 
+    private static final double CONTINUOUS_SERVO_STOP = 0.5;
+    private static final double CONTINUOUS_SERVO_FORWARD = 1.0;
+    private static final double CONTINUOUS_SERVO_REVERSE = 0.0;
+
+    public enum ServoPosition
+    {
+        STOP,
+        FORWARD,
+        REVERSE
+    }
+
     /* local OpMode members. */
     private HardwareMap hwMap   =  null;
     private ElapsedTime period  = new ElapsedTime();
 
     /* Constructor */
-    public BaseRobot(){
+    public FTCBaseRobot(){
 
     }
 
@@ -86,21 +93,17 @@ public class BaseRobot
         // Define and Initialize Motors
         leftMotor  = hwMap.get(DcMotor.class, "leftMotor");
         rightMotor = hwMap.get(DcMotor.class, "rightMotor");
-        armMotor   = hwMap.get(DcMotor.class, "armMotor");
-        latchMotor = hwMap.get(DcMotor.class, "latchMotor");
+        armMotor    = hwMap.get(DcMotor.class, "armMotor");
+        latchMotor    = hwMap.get(DcMotor.class, "latchMotor");
 
         // Set all motors to zero power
         leftMotor.setPower(0);
         rightMotor.setPower(0);
-        latchMotor.setPower(0);
         armMotor.setPower(0);
+        latchMotor.setPower(0);
 
         // Set all motors to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.
-        leftMotor.setDirection(DcMotor.Direction.FORWARD);// Set to FORWARD if using AndyMark motors
-        rightMotor.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
-        armMotor.setDirection(DcMotor.Direction.REVERSE);
-        latchMotor.setDirection(DcMotor.Direction.FORWARD);
         leftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         armMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -108,18 +111,16 @@ public class BaseRobot
 
         // Define and initialize ALL installed servos.
         armServo  = hwMap.get(Servo.class, "armServo");
-        armServo.setPosition(MID_SERVO);
+        armServo.setPosition(CONTINUOUS_SERVO_STOP);
     }
 
-    public void DriveRobot(double leftPower, double rightPower, long seconds)
+    public void DriveRobot(double leftPower, double rightPower)
     {
         //Move the robot
+        leftMotor.setDirection(DcMotor.Direction.FORWARD);// Set to FORWARD if using AndyMark motors
         leftMotor.setPower(leftPower);
+        rightMotor.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
         rightMotor.setPower(rightPower);
-
-        sleep(seconds);
-        StopRobot(leftMotor);
-        StopRobot(rightMotor);
     }
 
     public void StopRobot(DcMotor motor)
@@ -128,9 +129,9 @@ public class BaseRobot
         if (motor==null) {
             leftMotor.setPower(0);
             rightMotor.setPower(0);
-            latchMotor.setPower(0);
             armMotor.setPower(0);
-
+            latchMotor.setPower(0);
+            armServo.setPosition(CONTINUOUS_SERVO_STOP);
         }
         else
         {
@@ -138,25 +139,70 @@ public class BaseRobot
         }
     }
 
+    public void MoveBasket(ServoPosition servoPos)
+    {
+        if(servoPos == ServoPosition.STOP)
+        {
+            armServo.setPosition(CONTINUOUS_SERVO_STOP);
+        }
+        else if (servoPos == ServoPosition.FORWARD)
+        {
+            armServo.setPosition(CONTINUOUS_SERVO_FORWARD);
+        }
+        else if(servoPos == ServoPosition.REVERSE)
+        {
+            armServo.setPosition(CONTINUOUS_SERVO_REVERSE);
+        }
+    }
+
+    //Autonomous
+
+    public void RobotDescend()
+    {
+        latchMotor.setDirection(DcMotor.Direction.FORWARD);
+        latchMotor.setPower(0.25);
+    }
+
+    public void RobotAscend() {
+        latchMotor.setDirection(DcMotor.Direction.REVERSE);
+        latchMotor.setPower(0.25);
+    }
+
     public void LiftBasket()
     {
         armMotor.setDirection(DcMotor.Direction.FORWARD);
-        armMotor.setPower(0.50);
+        armMotor.setPower(0.40);
     }
 
     public void DropBasket()
     {
-        armMotor.setPower(-0.5);
+        armMotor.setDirection(DcMotor.Direction.REVERSE);
+        armMotor.setPower(-0.35);
     }
 
-    public void lowerLatch()
+    //TeleOp
+
+    public void RobotDescend(double motorPower)
     {
-        latchMotor.setPower(-0.25);                         //Add power val based on calcs
-        sleep(4000);
-        StopRobot(latchMotor);
+        latchMotor.setDirection(DcMotor.Direction.FORWARD);
+        latchMotor.setPower(0.25);
     }
-    public void raiseLatch()
+
+    public void RobotAscend(double motorPower) {
+        latchMotor.setDirection(DcMotor.Direction.REVERSE);
+        latchMotor.setPower(0.25);
+    }
+
+    public void LiftBasket(double motorPower)
     {
-        latchMotor.setPower(0.25);                         //Add power val based on calcs
+        armMotor.setDirection(DcMotor.Direction.FORWARD);
+        armMotor.setPower(0.40);
+    }
+
+    public void DropBasket(double motorPower)
+    {
+        armMotor.setDirection(DcMotor.Direction.REVERSE);
+        armMotor.setPower(-0.35);
     }
  }
+
