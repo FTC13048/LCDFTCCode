@@ -169,7 +169,7 @@ public class AutoOpModeLinear extends LinearOpMode {
         telemetry.update();
 
         // Set the servo to the new position and pause;
-        baseRobot.armServo.setPosition(position);
+        baseRobot.armServo.setPower(position);
         sleep(CYCLE_MS);
         idle();
     }

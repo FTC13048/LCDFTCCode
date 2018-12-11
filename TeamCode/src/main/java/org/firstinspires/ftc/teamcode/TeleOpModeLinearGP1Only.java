@@ -55,6 +55,14 @@ public class TeleOpModeLinearGP1Only extends LinearOpMode {
     FTCBaseRobot baseRobot = new FTCBaseRobot();
     private ElapsedTime runtime = new ElapsedTime();
 
+    // Setup a variable for each drive wheel to save power level for telemetry
+    double leftPower =0;
+    double rightPower =0;
+    double armPower =0;
+    double servoPower = 0;
+    double armPosition=0;
+    double direction;
+
 
     @Override
     public void runOpMode() {
@@ -71,14 +79,6 @@ public class TeleOpModeLinearGP1Only extends LinearOpMode {
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
-
-
-            // Setup a variable for each drive wheel to save power level for telemetry
-            double leftPower =0;
-            double rightPower =0;
-            double armPower =0;
-            double armPosition=0;
-            double direction;
             /*
             // Choose to drive using either Tank Mode, or POV Mode
             // Comment out the method that's not used.  The default below is POV.
@@ -131,13 +131,28 @@ public class TeleOpModeLinearGP1Only extends LinearOpMode {
             }
 
             //AMR Up or Down
-            if(gamepad1.right_bumper){
-                armPower = 0.3; //arm up
+            if (gamepad1.left_stick_y !=0)
+            {
+                armPower = -gamepad1.left_stick_y / 2.5;
+                baseRobot.armMotor.setPower(armPower);
             }
-            else if (gamepad1.left_bumper){
-                armPower = - 0.3; //arm down
+            if(gamepad1.left_stick_button)
+            {
+                armPower = 0;
+                baseRobot.armMotor.setPower(armPower);
             }
-            baseRobot.armMotor.setPower(armPower);
+
+            //Basket front and back
+            if(gamepad1.right_stick_y !=0)
+            {
+                servoPower = -gamepad1.right_stick_y / 8;
+                baseRobot.MoveBasket(servoPower);
+            }
+            if(gamepad1.right_stick_button)
+            {
+                servoPower = 0;
+                baseRobot.MoveBasket(servoPower);
+            }
 
             //Extend and backtrack Basket
             if(gamepad1.x)
@@ -177,15 +192,17 @@ public class TeleOpModeLinearGP1Only extends LinearOpMode {
             }
 
             //stop robot
-            if(gamepad1.back)
+            if(gamepad1.back) //NOT WORKING
             {
                 telemetry.addData("GAMEPAD", "Back Button was pressed");
                 //baseRobot.StopRobot(null);
             }
 
             // Show the elapsed game time and wheel power.
-            //telemetry.addData("Status", "Run Time: " + runtime.toString());
-            //telemetry.addData("Motors", "left (%.2f), right (%.2f)", leftPower, rightPower);
+            telemetry.addData("Status", "Run Time: " + runtime.toString());
+            telemetry.addData("Motors", "left (%.2f), right (%.2f)", leftPower, rightPower);
+            telemetry.addData("ArmPower", "Pos: (%.2f)", baseRobot.armMotor.getPower());
+            telemetry.addData("ArmServo Pos", "Pos: (%.2f)", baseRobot.armServo.getPower());
             telemetry.update();
         }
     }

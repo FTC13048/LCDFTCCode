@@ -34,6 +34,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.hardware.CRServo;
 
 /**
  * This is NOT an opmode.
@@ -59,7 +60,7 @@ public class FTCBaseRobot
     public DcMotor  armMotor     = null;
     public DcMotor  latchMotor     = null;
 
-    public Servo    armServo    = null;
+    public CRServo    armServo    = null;
 
     public static final double MID_SERVO       =  0.5 ;
     public static final double ARM_UP_POWER    =  0.45 ;
@@ -110,7 +111,7 @@ public class FTCBaseRobot
         latchMotor.setPower(0);
 
         // Define and initialize ALL installed servos.
-        armServo  = hwMap.get(Servo.class, "armServo");
+        armServo  = hwMap.get(CRServo.class, "armServo");
         //armServo.setPosition(CONTINUOUS_SERVO_STOP);
     }
 
@@ -131,7 +132,7 @@ public class FTCBaseRobot
             rightMotor.setPower(0);
             armMotor.setPower(0);
             latchMotor.setPower(0);
-            armServo.setPosition(CONTINUOUS_SERVO_STOP);
+            armServo.setPower(CONTINUOUS_SERVO_STOP);
         }
         else
         {
@@ -143,16 +144,21 @@ public class FTCBaseRobot
     {
         if(servoPos == ServoPosition.STOP)
         {
-            armServo.setPosition(CONTINUOUS_SERVO_STOP);
+            armServo.setPower(CONTINUOUS_SERVO_STOP);
         }
         else if (servoPos == ServoPosition.FORWARD)
         {
-            armServo.setPosition(CONTINUOUS_SERVO_FORWARD);
+            armServo.setPower(CONTINUOUS_SERVO_FORWARD);
         }
         else if(servoPos == ServoPosition.REVERSE)
         {
-            armServo.setPosition(CONTINUOUS_SERVO_REVERSE);
+            armServo.setPower(CONTINUOUS_SERVO_REVERSE);
         }
+    }
+
+    public void MoveBasket(double servoPos)
+    {
+        armServo.setPower(servoPos);
     }
 
     //Autonomous
@@ -185,24 +191,24 @@ public class FTCBaseRobot
     public void RobotDescend(double motorPower)
     {
         latchMotor.setDirection(DcMotor.Direction.FORWARD);
-        latchMotor.setPower(0.25);
+        latchMotor.setPower(motorPower);
     }
 
     public void RobotAscend(double motorPower) {
         latchMotor.setDirection(DcMotor.Direction.REVERSE);
-        latchMotor.setPower(0.25);
+        latchMotor.setPower(motorPower);
     }
 
     public void LiftBasket(double motorPower)
     {
         armMotor.setDirection(DcMotor.Direction.FORWARD);
-        armMotor.setPower(0.40);
+        armMotor.setPower(motorPower);
     }
 
     public void DropBasket(double motorPower)
     {
         armMotor.setDirection(DcMotor.Direction.REVERSE);
-        armMotor.setPower(-0.35);
+        armMotor.setPower(motorPower);
     }
  }
 
