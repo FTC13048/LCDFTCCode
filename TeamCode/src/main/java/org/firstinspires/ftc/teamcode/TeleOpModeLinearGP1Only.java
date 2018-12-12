@@ -59,6 +59,7 @@ public class TeleOpModeLinearGP1Only extends LinearOpMode {
     double leftPower =0;
     double rightPower =0;
     double armPower =0;
+    double latchPower=0;
     double servoPower = 0;
     double armPosition=0;
     double direction;
@@ -150,8 +151,7 @@ public class TeleOpModeLinearGP1Only extends LinearOpMode {
             }
             if(gamepad1.right_stick_button)
             {
-                servoPower = 0;
-                baseRobot.MoveBasket(servoPower);
+                baseRobot.MoveBasket(FTCBaseRobot.ServoPosition.STOP);
             }
 
             //Extend and backtrack Basket
@@ -170,32 +170,24 @@ public class TeleOpModeLinearGP1Only extends LinearOpMode {
 
                 //baseRobot.MoveBasket(FTCBaseRobot.ServoPosition.FORWARD);
             }
-            else if(gamepad1.start)
-            {
-                telemetry.addData("GAMEPAD", "Start Button was pressed");
-                //baseRobot.MoveBasket(FTCBaseRobot.ServoPosition.STOP);
-            }
 
-
-            //Latch Up and Down
+            //Latch Up and Down the Pod - Option 1
             if(gamepad1.y)
             {
                 //Robot up
                 telemetry.addData("GAMEPAD", "Y Button was pressed");
-                //baseRobot.RobotAscend();
+                baseRobot.RobotAscend();
             }
             else if(gamepad1.a)
             {
                 //Robot down
                 telemetry.addData("GAMEPAD", "A Button was pressed");
-                //baseRobot.RobotDescend();
+                baseRobot.RobotDescend();
             }
-
-            //stop robot
-            if(gamepad1.back) //NOT WORKING
+            else if(gamepad1.start)
             {
-                telemetry.addData("GAMEPAD", "Back Button was pressed");
-                //baseRobot.StopRobot(null);
+                telemetry.addData("GAMEPAD", "Start Button was pressed");
+                baseRobot.StopRobot(null);
             }
 
             // Show the elapsed game time and wheel power.

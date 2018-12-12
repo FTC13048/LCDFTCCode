@@ -82,8 +82,14 @@ public class TeleOpModeLinear extends LinearOpMode {
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
-
-            //GAMEPAD 1
+//*************************************************************************************************
+//          GAMEPAD 1
+//          1. Left and Right Trigger: Gives power to the drive motors
+//          2. Dpad left and right buttons: Will turn the robot left or right
+//          3. Right joy stick up: Ascend the robot on the pod
+//          4. Right joy stick down: Descends the robot grom the pod
+//          5. Right joy stick press: Will stop the latch motor
+//*************************************************************************************************
 
             //move forward
             leftPower = gamepad1.right_trigger;
@@ -110,18 +116,28 @@ public class TeleOpModeLinear extends LinearOpMode {
             }
 
             //Latch Up and Down the Pod
-            if (gamepad1.right_stick_y !=0)
+            if (gamepad1.right_stick_y > 0)
             {
-                latchPower = -gamepad1.right_stick_y / 2.5;
+                latchPower = gamepad1.right_stick_y / 2.5;
                 baseRobot.RobotAscend(latchPower);
             }
-            if(gamepad2.left_stick_button)
+            else if (gamepad1.right_stick_y < 0)
+            {
+                latchPower = -gamepad1.right_stick_y / 2.5;
+                baseRobot.RobotDescend(latchPower);
+            }
+            else if(gamepad1.right_stick_button)
             {
                 latchPower = 0;
                 baseRobot.RobotDescend(latchPower);
             }
-
-            //GAMEPAD 2
+//*************************************************************************************************
+//          GAMEPAD 2
+//          1. Left joy stick up or down: Will pull the arm up or down
+//          2. Left joy stick press: Will stop the arm motor
+//          3. Right joy stick up or down: Will extend or backtrack the basket
+//          4. Right joy stick press: Will stop the basket servo
+//*************************************************************************************************
 
             //AMR Up or Down
             if (gamepad2.left_stick_y !=0)
@@ -135,19 +151,20 @@ public class TeleOpModeLinear extends LinearOpMode {
                 baseRobot.armMotor.setPower(armPower);
             }
 
-            //Basket front and back
+            //Basket Extend and Backtrack - Option 1
             if(gamepad2.right_stick_y !=0)
             {
                 servoPower = -gamepad2.right_stick_y / 8;
                 baseRobot.MoveBasket(servoPower);
             }
+
             if(gamepad2.right_stick_button)
             {
-                servoPower = 0;
-                baseRobot.MoveBasket(servoPower);
+                baseRobot.MoveBasket(FTCBaseRobot.ServoPosition.STOP);
             }
 
-            //Extend and backtrack Basket
+            //Basket Extend and Backtrack - Option 2 - Alternate to right joy stick control above
+            /*
             if(gamepad2.x)
             {
                 //extend
@@ -162,15 +179,11 @@ public class TeleOpModeLinear extends LinearOpMode {
             {
                 baseRobot.MoveBasket(FTCBaseRobot.ServoPosition.STOP);
             }
+            */
 
-            //GAMEPAD 1 and 2
-
-            //stop robot
-            if(gamepad1.back || gamepad2.back) //NOT WORKING
-            {
-                baseRobot.StopRobot(null);
-            }
-
+//*************************************************************************************************
+//          Update Driver Station with telemetry data
+//*************************************************************************************************
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());
             telemetry.addData("Motors", "left (%.2f), right (%.2f)", leftPower, rightPower);

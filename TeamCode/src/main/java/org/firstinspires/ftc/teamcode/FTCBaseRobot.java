@@ -66,7 +66,7 @@ public class FTCBaseRobot
     public static final double ARM_UP_POWER    =  0.45 ;
     public static final double ARM_DOWN_POWER  = -0.45 ;
 
-    private static final double CONTINUOUS_SERVO_STOP = 0.5;
+    private static final double CONTINUOUS_SERVO_STOP = 0.05;
     private static final double CONTINUOUS_SERVO_FORWARD = 1.0;
     private static final double CONTINUOUS_SERVO_REVERSE = 0.0;
 
@@ -112,8 +112,12 @@ public class FTCBaseRobot
 
         // Define and initialize ALL installed servos.
         armServo  = hwMap.get(CRServo.class, "armServo");
-        //armServo.setPosition(CONTINUOUS_SERVO_STOP);
+        armServo.setPower(CONTINUOUS_SERVO_STOP);
     }
+
+//*************************************************************************************************
+//          General
+//*************************************************************************************************
 
     public void DriveRobot(double leftPower, double rightPower)
     {
@@ -139,6 +143,42 @@ public class FTCBaseRobot
             motor.setPower(0);
         }
     }
+//*************************************************************************************************
+//          Autonomous
+//*************************************************************************************************
+
+    public void RobotAscend()
+    {
+        latchMotor.setDirection(DcMotor.Direction.REVERSE);
+        latchMotor.setPower(0.25);
+    }
+
+    public void RobotDescend()
+    {
+        latchMotor.setDirection(DcMotor.Direction.FORWARD);
+        latchMotor.setPower(0.25);
+    }
+
+//*************************************************************************************************
+//          TeleOp
+//*************************************************************************************************
+
+    public void RobotAscend(double motorPower) {
+        latchMotor.setDirection(DcMotor.Direction.REVERSE);
+        latchMotor.setPower(motorPower);
+    }
+
+    public void RobotDescend(double motorPower)
+    {
+        latchMotor.setDirection(DcMotor.Direction.FORWARD);
+        latchMotor.setPower(motorPower);
+    }
+
+    public void MoveBasket(double servoPos)
+    {
+        armServo.setPower(servoPos);
+    }
+
 
     public void MoveBasket(ServoPosition servoPos)
     {
@@ -154,61 +194,6 @@ public class FTCBaseRobot
         {
             armServo.setPower(CONTINUOUS_SERVO_REVERSE);
         }
-    }
-
-    public void MoveBasket(double servoPos)
-    {
-        armServo.setPower(servoPos);
-    }
-
-    //Autonomous
-
-    public void RobotDescend()
-    {
-        latchMotor.setDirection(DcMotor.Direction.FORWARD);
-        latchMotor.setPower(0.25);
-    }
-
-    public void RobotAscend() {
-        latchMotor.setDirection(DcMotor.Direction.REVERSE);
-        latchMotor.setPower(0.25);
-    }
-
-    public void LiftBasket()
-    {
-        armMotor.setDirection(DcMotor.Direction.FORWARD);
-        armMotor.setPower(0.40);
-    }
-
-    public void DropBasket()
-    {
-        armMotor.setDirection(DcMotor.Direction.REVERSE);
-        armMotor.setPower(-0.35);
-    }
-
-    //TeleOp
-
-    public void RobotDescend(double motorPower)
-    {
-        latchMotor.setDirection(DcMotor.Direction.FORWARD);
-        latchMotor.setPower(motorPower);
-    }
-
-    public void RobotAscend(double motorPower) {
-        latchMotor.setDirection(DcMotor.Direction.REVERSE);
-        latchMotor.setPower(motorPower);
-    }
-
-    public void LiftBasket(double motorPower)
-    {
-        armMotor.setDirection(DcMotor.Direction.FORWARD);
-        armMotor.setPower(motorPower);
-    }
-
-    public void DropBasket(double motorPower)
-    {
-        armMotor.setDirection(DcMotor.Direction.REVERSE);
-        armMotor.setPower(motorPower);
     }
  }
 
