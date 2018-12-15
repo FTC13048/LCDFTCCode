@@ -82,8 +82,7 @@ public class AutoOpModeLinear extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        // Connect to servo (Assume PushBot Left Hand)
-        // Change the text in quotes to match any servo name on your robot.
+
         baseRobot.init(hardwareMap);
 
         // Wait for the start button
@@ -95,121 +94,22 @@ public class AutoOpModeLinear extends LinearOpMode {
 
         // Run code till stop pressed.
         while(opModeIsActive()){
-
-            //TestServo();
-            //Run the robot for 7 seconds and then left the basket to deliver minerals to the pod
-
             baseRobot.RobotDescend();
-            sleep(5000);
+            sleep(6000);
             baseRobot.StopRobot(baseRobot.latchMotor);
-            baseRobot.DriveRobot(-0.25,-0.25);
+            baseRobot.DriveRobot(0.20,0.0); //right turn
             sleep(1000);
-            baseRobot.DriveRobot(0.25,0);
-            sleep(2000);
-
-            /*
-            if(runtime.seconds() < 5) {
-                DriveMotor();
-                telemetry.addData("Status", "Driving Motor for: " + runtime.seconds());
-                telemetry.update();
-            }
-            else {
-                StopAllMotors();
-                LiftBasket();
-                if(runtime.seconds() < 8)
-                {
-                    DropBasket();
-                    StopAllMotors();
-                }
-            }
-            telemetry.addData("Status", "Run Time: " + runtime.seconds());
-            telemetry.update();
-
-            if(runtime.seconds() < 3) {
-                LiftBasket();
-            }
-            else if(runtime.seconds() < 6)
-            {
-                DropBasket();
-                StopAllMotors();
-            }
-            */
-            //LiftBasket();
+            //baseRobot.DriveRobot(-0.25,-0.25); // reverse
+            //sleep(500);
+            baseRobot.DriveRobot(0.0,0.25); //left turn
+            sleep(1500);
+            baseRobot.DriveRobot(0.4,0.4); //go straight
+            sleep(1000);
+            stop();
         }
 
         // Signal done;
         telemetry.addData(">", "Done");
         telemetry.update();
-    }
-
-    private void TestServo()
-    {
-        // slew the servo, according to the rampUp (direction) variable.
-        if (rampUp) {
-            // Keep stepping up until we hit the max value.
-            position += INCREMENT ;
-            if (position >= MAX_POS ) {
-                position = MAX_POS;
-                rampUp = !rampUp;   // Switch ramp direction
-            }
-        }
-        else {
-            // Keep stepping down until we hit the min value.
-            position -= INCREMENT ;
-            if (position <= MIN_POS ) {
-                position = MIN_POS;
-                rampUp = !rampUp;  // Switch ramp direction
-
-            }
-        }
-
-        // Display the current value
-        telemetry.addData("Servo Position", "%5.2f", position);
-        telemetry.addData(">", "Press Stop to end test." );
-        telemetry.update();
-
-        // Set the servo to the new position and pause;
-        baseRobot.armServo.setPower(position);
-        sleep(CYCLE_MS);
-        idle();
-    }
-
-    private void DriveMotor()
-    {
-        // Landing the root
-        //baseRobot.armMotor.setDirection(DcMotor.Direction.REVERSE);
-        //baseRobot.armMotor.setPower(0.15);
-
-        //Move the robot
-        baseRobot.leftMotor.setDirection(DcMotor.Direction.FORWARD);// Set to FORWARD if using AndyMark motors
-        baseRobot.leftMotor.setPower(0.25);
-        baseRobot.rightMotor.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
-        baseRobot.rightMotor.setPower(0.25);
-    }
-
-    private void StopAllMotors()
-    {
-        // Set all motors to zero power
-        baseRobot.leftMotor.setPower(0);
-        baseRobot.rightMotor.setPower(0);
-        baseRobot.armMotor.setPower(0);
-    }
-
-    private void LiftBasket()
-    {
-        //baseRobot.armServo.setPosition(-position);
-        baseRobot.armMotor.setDirection(DcMotor.Direction.FORWARD);
-        baseRobot.armMotor.setPower(0.40);
-        //sleep(CYCLE_MS);
-        //idle();
-    }
-
-    private void DropBasket()
-    {
-        //baseRobot.armServo.setPosition(-position);
-        baseRobot.armMotor.setDirection(DcMotor.Direction.REVERSE);
-        baseRobot.armMotor.setPower(-0.35);
-        sleep(CYCLE_MS);
-        idle();
     }
 }

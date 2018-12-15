@@ -89,6 +89,8 @@ public class TeleOpModeLinear extends LinearOpMode {
 //          3. Right joy stick up: Ascend the robot on the pod
 //          4. Right joy stick down: Descends the robot grom the pod
 //          5. Right joy stick press: Will stop the latch motor
+//          6. Left joy stick: NOT USED
+//          7. X,Y,A,B: NOT USED
 //*************************************************************************************************
 
             //move forward
@@ -103,15 +105,28 @@ public class TeleOpModeLinear extends LinearOpMode {
 
             //left turn
             if(gamepad1.dpad_left) {
-                leftPower = 0.4;
-                rightPower = -gamepad1.right_trigger;
+                leftPower = 0.0; //0.5;
+                rightPower = 0.5; //-gamepad1.right_trigger;
                 baseRobot.DriveRobot(leftPower,rightPower);
             }
 
             //right turn
             if(gamepad1.dpad_right) {
+                leftPower = 0.5; //-gamepad1.right_trigger;
+                rightPower = 0.0; //0.5;
+                baseRobot.DriveRobot(leftPower,rightPower);
+            }
+
+            if(gamepad1.dpad_up) {
+                leftPower = -0.4;
+                rightPower = -gamepad1.right_trigger;
+                baseRobot.DriveRobot(leftPower,rightPower);
+            }
+
+            //right turn
+            if(gamepad1.dpad_down) {
                 leftPower = -gamepad1.right_trigger;
-                rightPower = 0.4;
+                rightPower = -0.4;
                 baseRobot.DriveRobot(leftPower,rightPower);
             }
 
@@ -137,6 +152,10 @@ public class TeleOpModeLinear extends LinearOpMode {
 //          2. Left joy stick press: Will stop the arm motor
 //          3. Right joy stick up or down: Will extend or backtrack the basket
 //          4. Right joy stick press: Will stop the basket servo
+//          5. Left and Right Triggers: NOT USED
+//          6. Left and Right Bumpers: NOT USED
+//          7. X,Y,A,B: NOT USED
+//          8. DPADS: NOT USED
 //*************************************************************************************************
 
             //AMR Up or Down
@@ -162,24 +181,6 @@ public class TeleOpModeLinear extends LinearOpMode {
             {
                 baseRobot.MoveBasket(FTCBaseRobot.ServoPosition.STOP);
             }
-
-            //Basket Extend and Backtrack - Option 2 - Alternate to right joy stick control above
-            /*
-            if(gamepad2.x)
-            {
-                //extend
-                baseRobot.MoveBasket(FTCBaseRobot.ServoPosition.REVERSE);
-            }
-            else if (gamepad2.b)
-            {
-                //backtrack
-                baseRobot.MoveBasket(FTCBaseRobot.ServoPosition.FORWARD);
-            }
-            else if(gamepad2.start)
-            {
-                baseRobot.MoveBasket(FTCBaseRobot.ServoPosition.STOP);
-            }
-            */
 
 //*************************************************************************************************
 //          Update Driver Station with telemetry data

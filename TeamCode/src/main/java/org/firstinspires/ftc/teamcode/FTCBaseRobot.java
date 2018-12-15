@@ -40,17 +40,9 @@ import com.qualcomm.robotcore.hardware.CRServo;
  * This is NOT an opmode.
  *
  * This class can be used to define all the specific hardware for a single robot.
- * In this case that robot is a Pushbot.
- * See PushbotTeleopTank_Iterative and others classes starting with "Pushbot" for usage examples.
  *
  * This hardware class assumes the following device names have been configured on the robot:
  * Note:  All names are lower case and some have single spaces between words.
- *
- * Motor channel:  Left  drive motor:        "left_drive"
- * Motor channel:  Right drive motor:        "right_drive"
- * Motor channel:  Manipulator drive motor:  "left_arm"
- * Servo channel:  Servo to open left claw:  "left_hand"
- * Servo channel:  Servo to open right claw: "right_hand"
  */
 public class FTCBaseRobot
 {
@@ -61,10 +53,6 @@ public class FTCBaseRobot
     public DcMotor  latchMotor     = null;
 
     public CRServo    armServo    = null;
-
-    public static final double MID_SERVO       =  0.5 ;
-    public static final double ARM_UP_POWER    =  0.45 ;
-    public static final double ARM_DOWN_POWER  = -0.45 ;
 
     private static final double CONTINUOUS_SERVO_STOP = 0.05;
     private static final double CONTINUOUS_SERVO_FORWARD = 1.0;
@@ -149,14 +137,14 @@ public class FTCBaseRobot
 
     public void RobotAscend()
     {
-        latchMotor.setDirection(DcMotor.Direction.REVERSE);
-        latchMotor.setPower(0.25);
+        latchMotor.setDirection(DcMotor.Direction.FORWARD);
+        latchMotor.setPower(0.35);
     }
 
     public void RobotDescend()
     {
-        latchMotor.setDirection(DcMotor.Direction.FORWARD);
-        latchMotor.setPower(0.25);
+        latchMotor.setDirection(DcMotor.Direction.REVERSE);
+        latchMotor.setPower(0.45);
     }
 
 //*************************************************************************************************
