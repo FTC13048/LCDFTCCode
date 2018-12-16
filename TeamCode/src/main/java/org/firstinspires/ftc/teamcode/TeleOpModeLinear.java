@@ -105,15 +105,15 @@ public class TeleOpModeLinear extends LinearOpMode {
 
             //left turn
             if(gamepad1.dpad_left) {
-                leftPower = -0.25; //0.5;
-                rightPower = 0.5; //-gamepad1.right_trigger;
+                leftPower = -0.75; //0.5;
+                rightPower = 0.75; //-gamepad1.right_trigger;
                 baseRobot.DriveRobot(leftPower,rightPower);
             }
 
             //right turn
             if(gamepad1.dpad_right) {
-                leftPower = 0.5; //-gamepad1.right_trigger;
-                rightPower = -0.25; //0.5;
+                leftPower = 0.75; //-gamepad1.right_trigger;
+                rightPower = -0.75; //0.5;
                 baseRobot.DriveRobot(leftPower,rightPower);
             }
 
