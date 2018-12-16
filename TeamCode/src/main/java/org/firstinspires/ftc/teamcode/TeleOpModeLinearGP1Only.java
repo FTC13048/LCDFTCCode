@@ -151,7 +151,7 @@ public class TeleOpModeLinearGP1Only extends LinearOpMode {
             }
             if(gamepad1.right_stick_button)
             {
-                baseRobot.MoveBasket(FTCBaseRobot.ServoPosition.STOP);
+                baseRobot.MoveBasket(FTCBaseRobot.CRServoPosition.STOP);
             }
 
             //Extend and backtrack Basket

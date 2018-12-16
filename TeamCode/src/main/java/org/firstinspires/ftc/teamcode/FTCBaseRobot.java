@@ -54,15 +54,27 @@ public class FTCBaseRobot {
     public DcMotor latchMotor;
 
     public CRServo armServo = null;
+    public Servo hookServo = null;
 
     private static final double CONTINUOUS_SERVO_STOP = 0.05;
     private static final double CONTINUOUS_SERVO_FORWARD = 1.0;
     private static final double CONTINUOUS_SERVO_REVERSE = 0.0;
 
-    public enum ServoPosition {
+    public enum CRServoPosition {
         STOP,
         FORWARD,
         REVERSE
+    }
+
+    private static final double HB_SERVO_OPEN = 1.0;
+    private static final double HB_SERVO_CLOSE = 0.0;
+    private static final double HB_SERVO_MID = 0.5;
+
+    public enum HBServoPosition
+    {
+        OPEN,
+        MID,
+        CLOSE
     }
 
     /* local OpMode members. */
@@ -102,6 +114,9 @@ public class FTCBaseRobot {
         armServo = hwMap.get(CRServo.class, "armServo");
         armServo.setPower(CONTINUOUS_SERVO_STOP);
 
+        hookServo = hwMap.get(Servo.class, "hookServo");
+        hookServo.setPosition(HB_SERVO_MID);
+
     }
 
 //*************************************************************************************************
@@ -128,6 +143,22 @@ public class FTCBaseRobot {
 
     public void StopRobot(DcMotor motor) {
         motor.setPower(0);
+    }
+
+    public void ManageHook(HBServoPosition servoPosition)
+    {
+        if(servoPosition == HBServoPosition.OPEN)
+        {
+            hookServo.setPosition(HB_SERVO_OPEN);
+        }
+        else if(servoPosition == HBServoPosition.CLOSE)
+        {
+            hookServo.setPosition(HB_SERVO_CLOSE);
+        }
+        else if(servoPosition == HBServoPosition.MID)
+        {
+            hookServo.setPosition(HB_SERVO_MID);
+        }
     }
 
 //*************************************************************************************************
@@ -163,12 +194,12 @@ public class FTCBaseRobot {
     }
 
 
-    public void MoveBasket(ServoPosition servoPos) {
-        if (servoPos == ServoPosition.STOP) {
+    public void MoveBasket(CRServoPosition servoPos) {
+        if (servoPos == CRServoPosition.STOP) {
             armServo.setPower(CONTINUOUS_SERVO_STOP);
-        } else if (servoPos == ServoPosition.FORWARD) {
+        } else if (servoPos == CRServoPosition.FORWARD) {
             armServo.setPower(CONTINUOUS_SERVO_FORWARD);
-        } else if (servoPos == ServoPosition.REVERSE) {
+        } else if (servoPos == CRServoPosition.REVERSE) {
             armServo.setPower(CONTINUOUS_SERVO_REVERSE);
         }
     }

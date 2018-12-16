@@ -146,6 +146,16 @@ public class TeleOpModeLinear extends LinearOpMode {
                 latchPower = 0;
                 baseRobot.RobotDescend(latchPower);
             }
+
+            //hook Servo open and close
+            if(gamepad1.x)
+            {
+                baseRobot.ManageHook(FTCBaseRobot.HBServoPosition.MID);
+            }
+            if (gamepad1.b)
+            {
+                baseRobot.ManageHook(FTCBaseRobot.HBServoPosition.OPEN);
+            }
 //*************************************************************************************************
 //          GAMEPAD 2
 //          1. Left joy stick up or down: Will pull the arm up or down
@@ -179,7 +189,7 @@ public class TeleOpModeLinear extends LinearOpMode {
 
             if(gamepad2.right_stick_button)
             {
-                baseRobot.MoveBasket(FTCBaseRobot.ServoPosition.STOP);
+                baseRobot.MoveBasket(FTCBaseRobot.CRServoPosition.STOP);
             }
 
 //*************************************************************************************************
