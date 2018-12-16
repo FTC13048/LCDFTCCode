@@ -29,6 +29,8 @@
 
 package org.firstinspires.ftc.teamcode;
 
+import android.app.Activity;
+
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -38,39 +40,37 @@ import com.qualcomm.robotcore.hardware.CRServo;
 
 /**
  * This is NOT an opmode.
- *
+ * <p>
  * This class can be used to define all the specific hardware for a single robot.
- *
+ * <p>
  * This hardware class assumes the following device names have been configured on the robot:
  * Note:  All names are lower case and some have single spaces between words.
  */
-public class FTCBaseRobot
-{
+public class FTCBaseRobot {
     /* Public OpMode members. */
-    public DcMotor  leftMotor   = null;
-    public DcMotor  rightMotor  = null;
-    public DcMotor  armMotor     = null;
-    public DcMotor  latchMotor     = null;
+    public DcMotor leftMotor;
+    public DcMotor rightMotor;
+    public DcMotor armMotor;
+    public DcMotor latchMotor;
 
-    public CRServo    armServo    = null;
+    public CRServo armServo = null;
 
     private static final double CONTINUOUS_SERVO_STOP = 0.05;
     private static final double CONTINUOUS_SERVO_FORWARD = 1.0;
     private static final double CONTINUOUS_SERVO_REVERSE = 0.0;
 
-    public enum ServoPosition
-    {
+    public enum ServoPosition {
         STOP,
         FORWARD,
         REVERSE
     }
 
     /* local OpMode members. */
-    private HardwareMap hwMap   =  null;
-    private ElapsedTime period  = new ElapsedTime();
+    private HardwareMap hwMap = null;
+    private ElapsedTime period = new ElapsedTime();
 
     /* Constructor */
-    public FTCBaseRobot(){
+    public FTCBaseRobot() {
 
     }
 
@@ -80,10 +80,10 @@ public class FTCBaseRobot
         hwMap = ahwMap;
 
         // Define and Initialize Motors
-        leftMotor  = hwMap.get(DcMotor.class, "leftMotor");
+        leftMotor = hwMap.get(DcMotor.class, "leftMotor");
         rightMotor = hwMap.get(DcMotor.class, "rightMotor");
-        armMotor    = hwMap.get(DcMotor.class, "armMotor");
-        latchMotor    = hwMap.get(DcMotor.class, "latchMotor");
+        armMotor = hwMap.get(DcMotor.class, "armMotor");
+        latchMotor = hwMap.get(DcMotor.class, "latchMotor");
 
         // Set all motors to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.
@@ -99,50 +99,47 @@ public class FTCBaseRobot
         latchMotor.setPower(0);
 
         // Define and initialize ALL installed servos.
-        armServo  = hwMap.get(CRServo.class, "armServo");
+        armServo = hwMap.get(CRServo.class, "armServo");
         armServo.setPower(CONTINUOUS_SERVO_STOP);
+
     }
 
 //*************************************************************************************************
 //          General
 //*************************************************************************************************
 
-    public void DriveRobot(double leftPower, double rightPower)
-    {
+    public void DriveRobot(double leftPower, double rightPower) {
         //Move the robot
-        rightMotor.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
-        rightMotor.setPower(rightPower);
-        leftMotor.setDirection(DcMotor.Direction.FORWARD);// Set to FORWARD if using AndyMark motors
-        leftMotor.setPower(leftPower);
+        if (rightMotor != null && leftMotor != null ) {
+            rightMotor.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
+            rightMotor.setPower(rightPower);
+            leftMotor.setDirection(DcMotor.Direction.FORWARD);// Set to FORWARD if using AndyMark motors
+            leftMotor.setPower(leftPower);
+        }
     }
 
-    public void StopRobot(DcMotor motor)
-    {
+    public void StopRobot() {
         // Set all motors to zero power if not reference is provided
-        if (motor==null) {
-            leftMotor.setPower(0);
-            rightMotor.setPower(0);
-            armMotor.setPower(0);
-            latchMotor.setPower(0);
-            armServo.setPower(CONTINUOUS_SERVO_STOP);
-        }
-        else
-        {
-            motor.setPower(0);
-        }
+        leftMotor.setPower(0);
+        rightMotor.setPower(0);
+        armMotor.setPower(0);
+        latchMotor.setPower(0);
     }
+
+    public void StopRobot(DcMotor motor) {
+        motor.setPower(0);
+    }
+
 //*************************************************************************************************
 //          Autonomous
 //*************************************************************************************************
 
-    public void RobotAscend()
-    {
+    public void RobotAscend() {
         latchMotor.setDirection(DcMotor.Direction.FORWARD);
         latchMotor.setPower(0.35);
     }
 
-    public void RobotDescend()
-    {
+    public void RobotDescend() {
         latchMotor.setDirection(DcMotor.Direction.REVERSE);
         latchMotor.setPower(0.45);
     }
@@ -156,32 +153,24 @@ public class FTCBaseRobot
         latchMotor.setPower(motorPower);
     }
 
-    public void RobotDescend(double motorPower)
-    {
+    public void RobotDescend(double motorPower) {
         latchMotor.setDirection(DcMotor.Direction.FORWARD);
         latchMotor.setPower(motorPower);
     }
 
-    public void MoveBasket(double servoPos)
-    {
+    public void MoveBasket(double servoPos) {
         armServo.setPower(servoPos);
     }
 
 
-    public void MoveBasket(ServoPosition servoPos)
-    {
-        if(servoPos == ServoPosition.STOP)
-        {
+    public void MoveBasket(ServoPosition servoPos) {
+        if (servoPos == ServoPosition.STOP) {
             armServo.setPower(CONTINUOUS_SERVO_STOP);
-        }
-        else if (servoPos == ServoPosition.FORWARD)
-        {
+        } else if (servoPos == ServoPosition.FORWARD) {
             armServo.setPower(CONTINUOUS_SERVO_FORWARD);
-        }
-        else if(servoPos == ServoPosition.REVERSE)
-        {
+        } else if (servoPos == ServoPosition.REVERSE) {
             armServo.setPower(CONTINUOUS_SERVO_REVERSE);
         }
     }
- }
+}
 
