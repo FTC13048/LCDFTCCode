@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.util.ElapsedTime;
+
 import java.util.List;
 import java.util.ArrayList;
 
@@ -32,7 +34,7 @@ public class vuforiaNavRecognize {
     private static final float mmFTCFieldWidth = (12 * 6) * mmPerInch;       // the width of the FTC field (from the center point to the outer panels)
     private static final float mmTargetHeight = (6) * mmPerInch;          // the height of the center of the target image above the floor
 
-    private static final VuforiaLocalizer.CameraDirection CAMERA_CHOICE = BACK;
+    private static final VuforiaLocalizer.CameraDirection CAMERA_CHOICE = FRONT;
     private final int CAMERA_FORWARD_DISPLACEMENT = 110;   // eg: Camera is 110 mm in front of robot center
     private final int CAMERA_VERTICAL_DISPLACEMENT = 200;   // eg: Camera is 200 mm above ground
     private final int CAMERA_LEFT_DISPLACEMENT = 0;     // eg: Camera is ON the robot's center line
@@ -52,6 +54,10 @@ public class vuforiaNavRecognize {
 
     public String getTrackableName() {
         return trackableName;
+    }
+
+    public void setGoldFound(boolean found) {
+        goldFound = found;
     }
 
     public VectorF getTranslation() {
@@ -133,7 +139,9 @@ public class vuforiaNavRecognize {
     }
 
     public int findGold() {
-        while (!goldFound) {
+        ElapsedTime runtimegold = new ElapsedTime();
+        runtimegold.reset();
+        while (!goldFound && runtimegold.seconds() < 3) {
             if (tfod != null) {
                 // getUpdatedRecognitions() will return null if no new information is available since
                 // the last time that call was made.
