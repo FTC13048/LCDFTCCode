@@ -115,7 +115,7 @@ public class FTCBaseRobot {
         armServo.setPower(CONTINUOUS_SERVO_STOP);
 
         hookServo = hwMap.get(Servo.class, "hookServo");
-        hookServo.setPosition(HB_SERVO_MID);
+        //hookServo.setPosition(HB_SERVO_OPEN);
 
     }
 
@@ -172,7 +172,7 @@ public class FTCBaseRobot {
 
     public void RobotDescend() {
         latchMotor.setDirection(DcMotor.Direction.REVERSE);
-        latchMotor.setPower(0.45);
+        latchMotor.setPower(0.6);
     }
 
 //*************************************************************************************************
