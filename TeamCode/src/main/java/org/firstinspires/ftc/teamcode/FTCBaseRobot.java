@@ -53,6 +53,7 @@ public class FTCBaseRobot
     public DcMotor  latchMotor     = null;
 
     public CRServo    armServo    = null;
+    public Servo hookServo = null;
 
     private static final double CONTINUOUS_SERVO_STOP = 0.05;
     private static final double CONTINUOUS_SERVO_FORWARD = 1.0;
@@ -101,6 +102,10 @@ public class FTCBaseRobot
         // Define and initialize ALL installed servos.
         armServo  = hwMap.get(CRServo.class, "armServo");
         armServo.setPower(CONTINUOUS_SERVO_STOP);
+
+        //hookServo = hwMap.get(Servo.class, "hookServo");
+        //hookServo.setPosition(0.5);
+
     }
 
 //*************************************************************************************************
