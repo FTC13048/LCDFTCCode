@@ -1,9 +1,12 @@
 package org.firstinspires.ftc.teamcode;
 
+import android.graphics.Color;
+
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.NormalizedRGBA;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -12,9 +15,9 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
 import static org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit.mmPerInch;
 
-@Autonomous(name = "AutoOpModeLinear_Mom", group = "Linear Opmode")
+@Autonomous(name = "AutoOpModeLinear LCD", group = "Auto Linear Opmode")
 //@Disabled
-public class AutoOpModeLinear_DS extends LinearOpMode {
+public class AutoOpModeLinearLCD extends LinearOpMode {
 
     private ElapsedTime runtime = new ElapsedTime();
     private static final double INCREMENT = 0.01;     // amount to slew servo each CYCLE_MS cycle
@@ -31,11 +34,13 @@ public class AutoOpModeLinear_DS extends LinearOpMode {
 
     FTCBaseRobot baseRobot = new FTCBaseRobot();
     vuforiaNavRecognize vuforiaNR = new vuforiaNavRecognize();
+    SensorColorLCD senseMineralColor = new SensorColorLCD();
 
     @Override
     public void runOpMode() {
         baseRobot.init(hardwareMap);
         vuforiaNR.initVuforia(hardwareMap);
+        senseMineralColor.init(hardwareMap);
 
         telemetry.addData(">", "Press Start.");
         telemetry.update();
@@ -48,17 +53,42 @@ public class AutoOpModeLinear_DS extends LinearOpMode {
             telemetry.addData("Gold Position", goldPos);
             telemetry.update();
 
-            //Step2: Unlatch
-            //Step3: Go towards Gold and Knock off Gold
-            sleep(5000); //to simulate the above 2 steps
-            //Step4: See if there is a Crater ahead of you using color distance sensor
+            //Step2: Descend
+            baseRobot.RobotDescend();
+            sleep(2500);
+            baseRobot.StopRobot(baseRobot.latchMotor);
 
-            //TODO
+			//Step3: Look for Gold one more time in case the last attempt failed
+			if ( goldPos == 0 ) {
+                vuforiaNR.setGoldFound(false);
+                goldPos = vuforiaNR.findGold();
+                telemetry.addData("Gold Position Again", goldPos);
+                telemetry.update();
+			}
+            //Step4: Go towards Gold and Knock off Gold
+			if ( goldPos == 1 ) {
+				baseRobot.DriveRobot(0.0,0.25); //left turn
+				sleep(1500);
+			} else if ( goldPos == 2 ) {
+				baseRobot.DriveRobot(0.4,0.4); //go straight
+				sleep(2000);
+			} else if ( goldPos == 3 ) {
+				baseRobot.DriveRobot(0.20,0.0); //right turn
+				sleep(1000);
+			}
+
+			//baseRobot.StopRobot();
+
+             stop();
+
+            /**Step4: See if there is a Crater ahead of you using color distance sensor
 
             //Step 4.1: OPTIONAL: Depending on testing, we might have to turn the robot a little to look at the walls for Navigational Targets
 
             //Step 4.2: OPTIONAL: See if you can find a Navigation Target in front of you.
-                vuforiaNR.findLocation();
+
+                // UNCOMMENT AS WE PROGRESS
+                /** vuforiaNR.findLocation();
                 VectorF translation1 = vuforiaNR.getTranslation();
                 Orientation rotation1 = vuforiaNR.getRotation();
 
@@ -66,7 +96,7 @@ public class AutoOpModeLinear_DS extends LinearOpMode {
                         translation1.get(0) / mmPerInch, translation1.get(1) / mmPerInch, translation1.get(2) / mmPerInch);
                 telemetry.addData("Navigation Found" , vuforiaNR.getTrackableName());
                 telemetry.update();
-
+                **/
 
              sleep(6000);
         }
@@ -74,7 +104,7 @@ public class AutoOpModeLinear_DS extends LinearOpMode {
         vuforiaNR.shutdown();
         telemetry.addData("Status", "Run Time: " + runtime.seconds());
         telemetry.update();
-        baseRobot.StopRobot(null);
+//        baseRobot.StopRobot(null);
     }
 
 }
