@@ -4,14 +4,19 @@ import android.graphics.Color;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.NormalizedRGBA;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+
+import java.util.Locale;
 
 import static org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit.mmPerInch;
 
@@ -38,6 +43,11 @@ public class AutoOpModeLinearLCD extends LinearOpMode {
 
     @Override
     public void runOpMode() {
+
+        ColorSensor sensorColor;
+        DistanceSensor sensorDistance;
+        float[] hsvValues;
+
         baseRobot.init(hardwareMap);
         vuforiaNR.initVuforia(hardwareMap);
         senseMineralColor.init(hardwareMap);
@@ -59,12 +69,14 @@ public class AutoOpModeLinearLCD extends LinearOpMode {
             baseRobot.StopRobot(baseRobot.latchMotor);
 
 			//Step3: Look for Gold one more time in case the last attempt failed
+            //Below is looking using vuforia. Replace with Color Sensor Code, if it works
 			if ( goldPos == 0 ) {
                 vuforiaNR.setGoldFound(false);
                 goldPos = vuforiaNR.findGold();
                 telemetry.addData("Gold Position Again", goldPos);
                 telemetry.update();
 			}
+
             //Step4: Go towards Gold and Knock off Gold
 			if ( goldPos == 1 ) {
 				baseRobot.DriveRobot(0.0,0.25); //left turn
@@ -75,17 +87,42 @@ public class AutoOpModeLinearLCD extends LinearOpMode {
 			} else if ( goldPos == 3 ) {
 				baseRobot.DriveRobot(0.20,0.0); //right turn
 				sleep(1000);
-			}
+			}  else {
+			    //GOD HELP YE !
+            }
 
 			//baseRobot.StopRobot();
 
-             stop();
+            //Step5: See if there is a Crater ahead of you using color distance sensor
+            sensorColor = senseMineralColor.getSensorColor();
+            sensorDistance = senseMineralColor.getSensorDistance();
+            hsvValues = senseMineralColor.getHsvValues();
 
-            /**Step4: See if there is a Crater ahead of you using color distance sensor
+            int alpha = sensorColor.alpha();
+            int red = sensorColor.red();
+            int green = sensorColor.green();
+            int blue = sensorColor.blue();
+            char craterDepot = 'N';
 
-            //Step 4.1: OPTIONAL: Depending on testing, we might have to turn the robot a little to look at the walls for Navigational Targets
+            if ( red > 100 || blue > 100 ) {
+                craterDepot = 'D';
+            } else  if ( red < 60 && blue < 60 && green < 60) {
+                craterDepot = 'C';
+            }
 
-            //Step 4.2: OPTIONAL: See if you can find a Navigation Target in front of you.
+            //telemetry.addData("Distance (cm)",
+              //      String.format(Locale.US, "%.02f", sensorDistance.getDistance(DistanceUnit.CM)));
+            //telemetry.addData("Alpha", alpha);
+            ///telemetry.addData("Red  ", red);
+            //telemetry.addData("Green", green);
+            //telemetry.addData("Blue ", blue);
+            telemetry.addData("Crater Depot ", craterDepot);
+            //telemetry.addData("Hue", hsvValues[0]);
+            telemetry.update();
+
+            //Step 5.1: OPTIONAL: Depending on testing, we might have to turn the robot a little to look at the walls for Navigational Targets
+
+            //Step 5.2: OPTIONAL: See if you can find a Navigation Target in front of you.
 
                 // UNCOMMENT AS WE PROGRESS
                 /** vuforiaNR.findLocation();
@@ -97,8 +134,12 @@ public class AutoOpModeLinearLCD extends LinearOpMode {
                 telemetry.addData("Navigation Found" , vuforiaNR.getTrackableName());
                 telemetry.update();
                 **/
+            //Step 6: Drive towards Depot
+            //Step 7: Place the Team Marker
+            //Step 8: Drive into Crater
 
-             sleep(6000);
+            stop();
+            sleep(6000);
         }
 
         vuforiaNR.shutdown();

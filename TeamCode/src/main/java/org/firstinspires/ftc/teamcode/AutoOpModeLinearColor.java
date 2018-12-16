@@ -4,8 +4,14 @@ import android.graphics.Color;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.ColorSensor;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.NormalizedRGBA;
 import com.qualcomm.robotcore.util.ElapsedTime;
+
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+
+import java.util.Locale;
 
 @Autonomous(name = "AutoOpModeLinearColor", group = "Auto Linear Opmode")
 //@Disabled
@@ -28,8 +34,11 @@ public class AutoOpModeLinearColor extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        senseMineralColor.init(hardwareMap);
+        ColorSensor sensorColor;
+        DistanceSensor sensorDistance;
+        float[] hsvValues;
 
+        senseMineralColor.init(hardwareMap);
 
         telemetry.addData(">", "Press Start.");
         telemetry.update();
@@ -37,31 +46,17 @@ public class AutoOpModeLinearColor extends LinearOpMode {
         runtime.reset();
 
         while (opModeIsActive()) {
-            senseMineralColor.runSensor();
-            float[] hsvValues = senseMineralColor.getHsvValues();
-            NormalizedRGBA colors = senseMineralColor.getColors();
-            int color = senseMineralColor.getColor();
+            sensorColor = senseMineralColor.getSensorColor();
+            sensorDistance = senseMineralColor.getSensorDistance();
+            hsvValues = senseMineralColor.getHsvValues();
 
-            telemetry.addLine()
-                    .addData("H", "%.3f", hsvValues[0])
-                    .addData("S", "%.3f", hsvValues[1])
-                    .addData("V", "%.3f", hsvValues[2]);
-            telemetry.addLine()
-                    .addData("a", "%.3f", colors.alpha)
-                    .addData("r", "%.3f", colors.red)
-                    .addData("g", "%.3f", colors.green)
-                    .addData("b", "%.3f", colors.blue);
-            telemetry.addLine("raw Android color: ")
-                    .addData("a", "%02x", Color.alpha(color))
-                    .addData("r", "%02x", Color.red(color))
-                    .addData("g", "%02x", Color.green(color))
-                    .addData("b", "%02x", Color.blue(color));
-
-            telemetry.addLine("normalized color:  ")
-                    .addData("a", "%02x", Color.alpha(color))
-                    .addData("r", "%02x", Color.red(color))
-                    .addData("g", "%02x", Color.green(color))
-                    .addData("b", "%02x", Color.blue(color));
+            telemetry.addData("Distance (cm)",
+                    String.format(Locale.US, "%.02f", sensorDistance.getDistance(DistanceUnit.CM)));
+            telemetry.addData("Alpha", sensorColor.alpha());
+            telemetry.addData("Red  ", sensorColor.red());
+            telemetry.addData("Green", sensorColor.green());
+            telemetry.addData("Blue ", sensorColor.blue());
+            telemetry.addData("Hue", hsvValues[0]);
             telemetry.update();
 
         }
