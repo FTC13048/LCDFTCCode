@@ -50,10 +50,15 @@ public class FTCBaseRobot {
     /* Public OpMode members. */
     public DcMotor leftMotor;
     public DcMotor rightMotor;
+    public DcMotor leftFrontMotor;
+    public DcMotor rightFrontMotor;
+    public DcMotor leftRearMotor;
+    public DcMotor rightRearMotor;
     public DcMotor armMotor;
     public DcMotor latchMotor;
 
     public CRServo armServo = null;
+    public CRServo yourMom = null;
     public Servo hookServo = null;
 
     private static final double CONTINUOUS_SERVO_STOP = 0.05;
@@ -92,29 +97,41 @@ public class FTCBaseRobot {
         hwMap = ahwMap;
 
         // Define and Initialize Motors
-        leftMotor = hwMap.get(DcMotor.class, "leftMotor");
-        rightMotor = hwMap.get(DcMotor.class, "rightMotor");
-        armMotor = hwMap.get(DcMotor.class, "armMotor");
+        //leftMotor = hwMap.get(DcMotor.class, "leftMotor");
+        //rightMotor = hwMap.get(DcMotor.class, "rightMotor");
+        //armMotor = hwMap.get(DcMotor.class, "armMotor");
         latchMotor = hwMap.get(DcMotor.class, "latchMotor");
+        leftFrontMotor = hwMap.get(DcMotor.class, "leftFrontMotor");
+        //rightFrontMotor = hwMap.get(DcMotor.class, "rightFrontMotor");
+        leftRearMotor = hwMap.get(DcMotor.class, "leftRearMotor");
+        rightRearMotor = hwMap.get(DcMotor.class, "rightRearMotor");
 
         // Set all motors to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.
-        leftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        rightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        armMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        //leftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        //rightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        //armMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         latchMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
+        leftRearMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        leftFrontMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rightRearMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        //rightFrontMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         // Set all motors to zero power
-        leftMotor.setPower(0);
-        rightMotor.setPower(0);
-        armMotor.setPower(0);
+        //leftMotor.setPower(0);
+        //rightMotor.setPower(0);
+        //armMotor.setPower(0);
         latchMotor.setPower(0);
+        leftRearMotor.setPower(0);
+        leftFrontMotor.setPower(0);
+        rightRearMotor.setPower(0);
+        //rightFrontMotor.setPower(0);
+
 
         // Define and initialize ALL installed servos.
-        armServo = hwMap.get(CRServo.class, "armServo");
-        armServo.setPower(CONTINUOUS_SERVO_STOP);
+       // yourMom = hwMap.get(CRServo.class, "yourMom");
+        //yourMom.setPower(CONTINUOUS_SERVO_STOP);
 
-        hookServo = hwMap.get(Servo.class, "hookServo");
+        //hookServo = hwMap.get(Servo.class, "hookServo");
         //hookServo.setPosition(HB_SERVO_OPEN);
 
     }
@@ -132,6 +149,53 @@ public class FTCBaseRobot {
             leftMotor.setPower(leftPower);
         }
     }
+
+    public void AWDRobot(double leftPower, double rightPower) {
+        //Move the robot
+
+        rightRearMotor.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
+        rightRearMotor.setPower(rightPower);
+
+        rightFrontMotor.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
+        rightFrontMotor.setPower(rightPower);
+
+        leftRearMotor.setDirection(DcMotor.Direction.FORWARD);// Set to FORWARD if using AndyMark motors
+        leftRearMotor.setPower(leftPower);
+
+
+        leftFrontMotor.setDirection(DcMotor.Direction.FORWARD);// Set to FORWARD if using AndyMark motors
+        leftFrontMotor.setPower(leftPower);
+
+    }
+
+    public void omniRobot(double mRP, double mLP) {
+        //The following is a test of what direction the mecanum wheels will go. Name Accordingly by the direction the robot goes
+        rightRearMotor.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
+        rightRearMotor.setPower(mRP);
+        rightFrontMotor.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
+        rightFrontMotor.setPower(-1*mRP);
+
+        leftRearMotor.setDirection(DcMotor.Direction.FORWARD);// Set to FORWARD if using AndyMark motors
+        leftRearMotor.setPower(-1*mRP);
+        leftFrontMotor.setDirection(DcMotor.Direction.FORWARD);// Set to FORWARD if using AndyMark motors
+        leftFrontMotor.setPower(mRP);
+        //***********************************************************************
+        //The following is the opposite of the code above
+        rightRearMotor.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
+        rightRearMotor.setPower(-1*mLP);
+        rightFrontMotor.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
+        rightFrontMotor.setPower(mLP);
+
+        leftRearMotor.setDirection(DcMotor.Direction.FORWARD);// Set to FORWARD if using AndyMark motors
+        leftRearMotor.setPower(mLP);
+        leftFrontMotor.setDirection(DcMotor.Direction.FORWARD);// Set to FORWARD if using AndyMark motors
+        leftFrontMotor.setPower(-1*mLP);
+
+
+
+
+    }
+
 
     public void StopRobot() {
         // Set all motors to zero power if not reference is provided
@@ -190,17 +254,17 @@ public class FTCBaseRobot {
     }
 
     public void MoveBasket(double servoPos) {
-        armServo.setPower(servoPos);
+        yourMom.setPower(servoPos);
     }
 
 
     public void MoveBasket(CRServoPosition servoPos) {
         if (servoPos == CRServoPosition.STOP) {
-            armServo.setPower(CONTINUOUS_SERVO_STOP);
+            yourMom.setPower(CONTINUOUS_SERVO_STOP);
         } else if (servoPos == CRServoPosition.FORWARD) {
-            armServo.setPower(CONTINUOUS_SERVO_FORWARD);
+            yourMom.setPower(CONTINUOUS_SERVO_FORWARD);
         } else if (servoPos == CRServoPosition.REVERSE) {
-            armServo.setPower(CONTINUOUS_SERVO_REVERSE);
+            yourMom.setPower(CONTINUOUS_SERVO_REVERSE);
         }
     }
 }
